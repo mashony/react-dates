@@ -1,0 +1,23 @@
+@import 'variables';
+
+.MonthPicker {
+  background: $react-dates-color-white;
+  position: relative;
+}
+
+.MonthPicker--horizontal {
+  background: $react-dates-color-white;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05), 0 0 0 1px rgba(0, 0, 0, 0.07);
+  border-radius: 3px;
+
+  &.MonthPicker--portal {
+    box-shadow: none;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+  }
+}
+
+.MonthPicker--vertical.MonthPicker--portal {
+  position: initial;
+}

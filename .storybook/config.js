@@ -12,6 +12,7 @@ function loadStories() {
   require('../stories/DateRangePicker');
   require('../stories/SingleDatePicker');
   require('../stories/DayPicker');
+  require('../stories/MonthPicker');  
 }
 
 setAddon(infoAddon);
