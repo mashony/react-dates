@@ -1,7 +1,7 @@
 {
-  "name": "react-dates",
+  "name": "@tombatossals/react-dates",
   "version": "4.3.0",
-  "description": "A responsive and accessible date range picker component built with React",
+  "description": "A responsive and accessible date range picker component built with React (with MonthPicker functionality)",
   "main": "index.js",
   "scripts": {
     "build": "npm run clean && npm run build:js && npm run build:css && npm run build:svg",
@@ -38,14 +38,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/airbnb/react-dates.git"
+    "url": "git+https://github.com/tombatossals/react-dates.git"
   },
   "author": "Maja Wichrowska <maja.wichrowska@airbnb.com>",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/airbnb/react-dates/issues"
   },
-  "homepage": "https://github.com/airbnb/react-dates#readme",
+  "homepage": "https://github.com/tombatossals/react-dates#readme",
   "devDependencies": {
     "@kadira/react-storybook-addon-info": "^3.3.0",
     "@kadira/storybook": "^2.24.0",
