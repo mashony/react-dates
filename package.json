@@ -1,6 +1,7 @@
 {
   "name": "@tombatossals/react-dates",
   "version": "4.3.0",
+  "private": false,
   "description": "A responsive and accessible date range picker component built with React (with MonthPicker functionality)",
   "main": "index.js",
   "scripts": {
