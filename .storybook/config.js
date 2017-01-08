@@ -18,6 +18,7 @@ function loadStories() {
   require('../stories/SingleDatePicker_calendar');
   require('../stories/SingleDatePicker_day');
   require('../stories/DayPicker');
+  require('../stories/MonthPicker');  
 }
 
 setAddon(infoAddon);
