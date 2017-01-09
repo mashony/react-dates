@@ -98,13 +98,13 @@ export default class CalendarMonthOption extends React.Component {
     return (
       <div
         className="CalendarMonthOption"
-        onMouseEnter={e => this.handleMonthMouseEnter(month, modifiers, e)}
-        onMouseLeave={e => this.handleMonthMouseLeave(month, modifiers, e)}
-        onMouseDown={e => this.handleMonthMouseDown(month, modifiers, e)}
-        onMouseUp={e => this.handleMonthMouseUp(month, modifiers, e)}
-        onClick={e => this.handleMonthClick(month, modifiers, e)}
-        onTouchStart={e => this.handleMonthTouchStart(month, modifiers, e)}
-        onTouchEnd={e => this.handleMonthTouchEnd(month, modifiers, e)}
+        onMouseEnter={e => this.handleMonthMouseEnter(month(), modifiers, e)}
+        onMouseLeave={e => this.handleMonthMouseLeave(month(), modifiers, e)}
+        onMouseDown={e => this.handleMonthMouseDown(month(), modifiers, e)}
+        onMouseUp={e => this.handleMonthMouseUp(month(), modifiers, e)}
+        onClick={e => this.handleMonthClick(month(), modifiers, e)}
+        onTouchStart={e => this.handleMonthTouchStart(month(), modifiers, e)}
+        onTouchEnd={e => this.handleMonthTouchEnd(month(), modifiers, e)}
       >
         <span className="CalendarMonthOption__month">{month().format('MMMM')}</span>
       </div>

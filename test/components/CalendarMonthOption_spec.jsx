@@ -26,15 +26,15 @@ describe('CalendarMonthOption', () => {
     });
 
     it('contains formatted day for single digit days', () => {
-      const firstOfMonth = moment().startOf('month');
+      const firstOfMonth = () => moment().startOf('month');
       const wrapper = shallow(<CalendarMonthOption day={firstOfMonth} />);
-      expect(wrapper.text()).to.equal(firstOfMonth.format('MMMM'));
+      expect(wrapper.text()).to.equal(firstOfMonth().format('MMMM'));
     });
 
     it('contains formatted day for double digit days', () => {
-      const lastOfMonth = moment().endOf('month');
+      const lastOfMonth = () => moment().endOf('month');
       const wrapper = shallow(<CalendarMonthOption day={lastOfMonth} />);
-      expect(wrapper.text()).to.equal(lastOfMonth.format('MMMM'));
+      expect(wrapper.text()).to.equal(lastOfMonth().format('MMMM'));
     });
   });
 
