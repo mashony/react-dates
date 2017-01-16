@@ -5,28 +5,21 @@ import MonthPicker from '../src/components/MonthPicker';
 
 import { VERTICAL_ORIENTATION } from '../constants';
 
+const navButtonStyle = {
+  border: '1px solid #dce0e0',
+  backgroundColor: '#fff',
+  color: '#484848',
+  padding: '3px',
+}
+
 const TestPrevIcon = () => (
-  <span
-    style={{
-      border: '1px solid #dce0e0',
-      backgroundColor: '#fff',
-      color: '#484848',
-      padding: '3px',
-    }}
-  >
+  <span style={navButtonStyle}>
     Prev
   </span>
 );
 
 const TestNextIcon = () => (
-  <span
-    style={{
-      border: '1px solid #dce0e0',
-      backgroundColor: '#fff',
-      color: '#484848',
-      padding: '3px',
-    }}
-  >
+  <span style={navButtonStyle}>
     Next
   </span>
 );
