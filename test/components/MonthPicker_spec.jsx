@@ -87,7 +87,7 @@ describe('MonthPicker', () => {
     });
   });
 
-  describe('#onPrevYearClick', () => {
+  describe('#onPrevClick', () => {
     let translateFirstMonthPickerForAnimationSpy;
     beforeEach(() => {
       translateFirstMonthPickerForAnimationSpy =
@@ -100,27 +100,27 @@ describe('MonthPicker', () => {
       sinon.restore();
     });
 
-    it('calls props.onPrevYearClick', () => {
-      const onPrevYearClickSpy = sinon.stub();
-      const wrapper = shallow(<MonthPicker onPrevYearClick={onPrevYearClickSpy} />);
-      wrapper.instance().onPrevYearClick();
-      expect(onPrevYearClickSpy).to.have.property('callCount', 1);
+    it('calls props.onPrevClick', () => {
+      const onPrevClickSpy = sinon.stub();
+      const wrapper = shallow(<MonthPicker onPrevClick={onPrevClickSpy} />);
+      wrapper.instance().onPrevClick();
+      expect(onPrevClickSpy).to.have.property('callCount', 1);
     });
 
     it('calls translateFirstMonthPickerForAnimation', () => {
       const wrapper = shallow(<MonthPicker />);
-      wrapper.instance().onPrevYearClick();
+      wrapper.instance().onPrevClick();
       expect(translateFirstMonthPickerForAnimationSpy).to.have.property('callCount', 1);
     });
 
     it('sets state.YearTransition to "prev"', () => {
       const wrapper = shallow(<MonthPicker />);
-      wrapper.instance().onPrevYearClick();
+      wrapper.instance().onPrevClick();
       expect(wrapper.state().YearTransition).to.equal('prev');
     });
   });
 
-  describe('#onNextYearClick', () => {
+  describe('#onNextClick', () => {
     beforeEach(() => {
       sinon.stub(MonthPicker.prototype, 'adjustMonthPickerHeight');
       sinon.stub(MonthPicker.prototype, 'updateStateAfterYearTransition');
@@ -130,16 +130,16 @@ describe('MonthPicker', () => {
       sinon.restore();
     });
 
-    it('calls props.onNextYearClick', () => {
-      const onNextYearClickSpy = sinon.stub();
-      const wrapper = shallow(<MonthPicker onNextYearClick={onNextYearClickSpy} />);
-      wrapper.instance().onNextYearClick();
-      expect(onNextYearClickSpy).to.have.property('callCount', 1);
+    it('calls props.onNextClick', () => {
+      const onNextClickSpy = sinon.stub();
+      const wrapper = shallow(<MonthPicker onNextClick={onNextClickSpy} />);
+      wrapper.instance().onNextClick();
+      expect(onNextClickSpy).to.have.property('callCount', 1);
     });
 
     it('sets state.YearTransition to "next"', () => {
       const wrapper = shallow(<MonthPicker />);
-      wrapper.instance().onNextYearClick();
+      wrapper.instance().onNextClick();
       expect(wrapper.state().YearTransition).to.equal('next');
     });
   });
@@ -188,7 +188,7 @@ describe('MonthPicker', () => {
       beforeEach(() => {
         updateStateAfterYearTransitionSpy = sinon.stub(
           MonthPicker.prototype,
-          'updateStateAfterYearTransition'
+          'updateStateAfterYearTransition',
         );
       });
 
@@ -224,7 +224,7 @@ describe('MonthPicker', () => {
               YearTransition: null,
             });
             expect(updateStateAfterYearTransitionSpy.calledOnce).to.equal(false);
-          }
+          },
         );
       });
 
@@ -260,7 +260,7 @@ describe('MonthPicker', () => {
               YearTransition: null,
             });
             expect(updateStateAfterYearTransitionSpy.calledOnce).to.equal(false);
-          }
+          },
         );
       });
     });
