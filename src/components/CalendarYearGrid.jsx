@@ -49,9 +49,14 @@ const defaultProps = {
   onMonthTouchEnd() {},
   onMonthTouchTap() {},
   onYearTransitionEnd() {},
+  transformValue: 'none',
   transform: 'none',
   yearFormat: 'YYYY',
 };
+
+function getThunkFromMoment(year) {
+  return () => year;
+}
 
 export default class CalendarYearGrid extends React.Component {
   constructor(props) {
@@ -88,10 +93,6 @@ export default class CalendarYearGrid extends React.Component {
     this.props.onYearTransitionEnd();
   }
 
-  getThunkFromMoment(year) {
-    return () => year;
-  }
-
   render() {
     const {
       firstVisibleYearIndex,
@@ -123,7 +124,7 @@ export default class CalendarYearGrid extends React.Component {
       years.push(
         <CalendarYear
           key={year}
-          year={this.getThunkFromMoment(year)}
+          year={getThunkFromMoment(year)}
           isVisible={isVisible}
           modifiers={modifiers}
           yearFormat={yearFormat}
@@ -136,7 +137,7 @@ export default class CalendarYearGrid extends React.Component {
           onMonthTouchStart={onMonthTouchStart}
           onMonthTouchEnd={onMonthTouchEnd}
           onMonthTouchTap={onMonthTouchTap}
-        />
+        />,
       );
       year = year.clone().add(1, 'year');
     }
@@ -149,7 +150,7 @@ export default class CalendarYearGrid extends React.Component {
 
     return (
       <div
-        ref={ref => { this.containerRef = ref; }}
+        ref={(ref) => { this.containerRef = ref; }}
         className={className}
         style={getTransformStyles(transformValue)}
         onTransitionEnd={onYearTransitionEnd}

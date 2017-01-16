@@ -84,7 +84,7 @@ const defaultProps = {
   monthFormat: 'MMMM YYYY',
 };
 
-function applyTransformStyles(el, transform, opacity = '') {
+export function applyTransformStyles(el, transform, opacity = '') {
   const transformStyles = getTransformStyles(transform);
   transformStyles.opacity = opacity;
 

@@ -8,8 +8,7 @@ import cx from 'classnames';
 import OutsideClickHandler from './OutsideClickHandler';
 import CalendarYearGrid from './CalendarYearGrid';
 import PickerNavigation from './PickerNavigation';
-
-import getTransformStyles from '../utils/getTransformStyles';
+import { applyTransformStyles, calculateDimension } from './DayPicker';
 
 import OrientationShape from '../shapes/OrientationShape';
 
@@ -74,6 +73,19 @@ const defaultProps = {
 
   yearFormat: 'YYYY',
 };
+
+function getMonthHeight(el) {
+  const caption = el.querySelector('.js-CalendarYear__caption');
+  const grid = el.querySelector('.js-CalendarYear__grid');
+
+  // Need to separate out table children for FF
+  // Add an additional +1 for the border
+  return (
+    calculateDimension(caption, 'height', true, true) +
+    calculateDimension(grid, 'height') + 1
+  );
+}
+
 
 export default class MonthPicker extends React.Component {
   constructor(props) {
@@ -166,66 +178,9 @@ export default class MonthPicker extends React.Component {
   }
 
   getMonthHeightByIndex(i) {
-    return this.getMonthHeight(
-      ReactDOM.findDOMNode(this.refs.transitionContainer).querySelectorAll('.CalendarYear')[i]
+    return getMonthHeight(
+      ReactDOM.findDOMNode(this.refs.transitionContainer).querySelectorAll('.CalendarYear')[i],
     );
-  }
-
-  getMonthHeight(el) {
-    const caption = el.querySelector('.js-CalendarYear__caption');
-    const grid = el.querySelector('.js-CalendarYear__grid');
-
-    // Need to separate out table children for FF
-    // Add an additional +1 for the border
-    return (
-      this.calculateDimension(caption, 'height', true, true) +
-      this.calculateDimension(grid, 'height') + 1
-    );
-  }
-
-  applyTransformStyles(el, transform, opacity = '') {
-    const transformStyles = getTransformStyles(transform);
-    transformStyles.opacity = opacity;
-
-    Object.keys(transformStyles).forEach((styleKey) => {
-      // eslint-disable-next-line no-param-reassign
-      el.style[styleKey] = transformStyles[styleKey];
-    });
-  }
-
-  calculateDimension(el, axis, borderBox = false, withMargin = false) {
-    if (!el) {
-      return 0;
-    }
-
-    const axisStart = (axis === 'width') ? 'Left' : 'Top';
-    const axisEnd = (axis === 'width') ? 'Right' : 'Bottom';
-
-    // Only read styles if we need to
-    const style = (!borderBox || withMargin) ? window.getComputedStyle(el) : {};
-
-    // Offset includes border and padding
-    let size = (axis === 'width') ? el.offsetWidth : el.offsetHeight;
-
-    // Get the inner size
-    if (!borderBox) {
-      size -= (
-        parseFloat(style[`padding${axisStart}`]) +
-        parseFloat(style[`padding${axisEnd}`]) +
-        parseFloat(style[`border${axisStart}Width`]) +
-        parseFloat(style[`border${axisEnd}Width`])
-      );
-    }
-
-    // Apply margin
-    if (withMargin) {
-      size += (
-        parseFloat(style[`margin${axisStart}`]) +
-        parseFloat(style[`margin${axisEnd}`])
-      );
-    }
-
-    return size;
   }
 
   isHorizontal() {
@@ -237,10 +192,10 @@ export default class MonthPicker extends React.Component {
   }
 
   initializeMonthPickerWidth() {
-    this.monthPickerWidth = this.calculateDimension(
+    this.monthPickerWidth = calculateDimension(
       ReactDOM.findDOMNode(this.refs.calendarYearGrid).querySelector('.CalendarYear'),
       'width',
-      true
+      true,
     );
   }
 
@@ -255,9 +210,9 @@ export default class MonthPicker extends React.Component {
     }
 
     // clear the previous transforms
-    this.applyTransformStyles(
+    applyTransformStyles(
       ReactDOM.findDOMNode(this.refs.calendarYearGrid).querySelector('.CalendarYear'),
-      'none'
+      'none',
     );
 
     this.setState({
@@ -274,13 +229,13 @@ export default class MonthPicker extends React.Component {
     // convert node list to array
     [...transitionContainer.querySelectorAll('.CalendarYear')].forEach((el) => {
       if (el.getAttribute('data-visible') === 'true') {
-        heights.push(this.getMonthHeight(el));
+        heights.push(getMonthHeight(el));
       }
     });
 
     const newYearHeight = Math.max(...heights) + YEAR_PADDING;
 
-    if (newYearHeight !== this.calculateDimension(transitionContainer, 'height')) {
+    if (newYearHeight !== calculateDimension(transitionContainer, 'height')) {
       this.yearHeight = newYearHeight;
       transitionContainer.style.height = `${newYearHeight}px`;
     }
@@ -290,10 +245,10 @@ export default class MonthPicker extends React.Component {
     const transformType = this.isVertical() ? 'translateY' : 'translateX';
     const transformValue = `${transformType}(-${translationValue}px)`;
 
-    this.applyTransformStyles(
+    applyTransformStyles(
       ReactDOM.findDOMNode(this.refs.transitionContainer).querySelector('.CalendarYear'),
       transformValue,
-      1
+      1,
     );
   }
 

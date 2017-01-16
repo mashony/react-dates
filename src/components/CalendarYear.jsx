@@ -1,3 +1,5 @@
+/* eslint react/no-array-index-key: 0 */
+
 import React, { PropTypes } from 'react';
 import moment from 'moment';
 import cx from 'classnames';
@@ -81,7 +83,7 @@ export default function CalendarYear(props) {
         <tbody className="js-CalendarYear__grid">
           {getCalendarYearMonths(year()).map((months, i) =>
             <tr key={i}>
-              {months.map(month => {
+              {months.map((month) => {
                 const modifiersForMonth = getModifiersForMonth(modifiers, month);
                 const className = cx('CalendarYear__month',
                   modifiersForMonth.map(mod => `CalendarYear__month--${mod}`));
@@ -103,7 +105,7 @@ export default function CalendarYear(props) {
                   </td>
                 );
               })}
-            </tr>
+            </tr>,
           )}
         </tbody>
       </table>
