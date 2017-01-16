@@ -18,8 +18,8 @@ const propTypes = forbidExtraProps({
   navNext: PropTypes.node,
   orientation: ScrollableOrientationShape,
 
-  onPrevMonthClick: PropTypes.func,
-  onNextMonthClick: PropTypes.func,
+  onPrevClick: PropTypes.func,
+  onNextClick: PropTypes.func,
 });
 
 const defaultProps = {
@@ -27,16 +27,16 @@ const defaultProps = {
   navNext: null,
   orientation: HORIZONTAL_ORIENTATION,
 
-  onPrevMonthClick() {},
-  onNextMonthClick() {},
+  onPrevClick() {},
+  onNextClick() {},
 };
 
-export default function DayPickerNavigation(props) {
+export default function PickerNavigation(props) {
   const {
     navPrev,
     navNext,
-    onPrevMonthClick,
-    onNextMonthClick,
+    onPrevClick,
+    onNextClick,
     orientation,
   } = props;
 
@@ -56,16 +56,16 @@ export default function DayPickerNavigation(props) {
     navNextIcon = isVertical ? <ChevronDown /> : <RightArrow />;
   }
 
-  const navClassNames = cx('DayPickerNavigation', {
-    'DayPickerNavigation--horizontal': !isVertical,
-    'DayPickerNavigation--vertical': isVertical,
-    'DayPickerNavigation--vertical-scrollable': isVerticalScrollable,
+  const navClassNames = cx('PickerNavigation', {
+    'PickerNavigation--horizontal': !isVertical,
+    'PickerNavigation--vertical': isVertical,
+    'PickerNavigation--vertical-scrollable': isVerticalScrollable,
   });
-  const prevClassNames = cx('DayPickerNavigation__prev', {
-    'DayPickerNavigation__prev--default': isDefaultNavPrev,
+  const prevClassNames = cx('PickerNavigation__prev', {
+    'PickerNavigation__prev--default': isDefaultNavPrev,
   });
-  const nextClassNames = cx('DayPickerNavigation__next', {
-    'DayPickerNavigation__next--default': isDefaultNavNext,
+  const nextClassNames = cx('PickerNavigation__next', {
+    'PickerNavigation__next--default': isDefaultNavNext,
   });
 
   return (
@@ -73,7 +73,7 @@ export default function DayPickerNavigation(props) {
       {!isVerticalScrollable &&
         <span
           className={prevClassNames}
-          onClick={onPrevMonthClick}
+          onClick={onPrevClick}
         >
           {navPrevIcon}
         </span>
@@ -81,7 +81,7 @@ export default function DayPickerNavigation(props) {
 
       <span
         className={nextClassNames}
-        onClick={onNextMonthClick}
+        onClick={onNextClick}
       >
         {navNextIcon}
       </span>
@@ -89,5 +89,5 @@ export default function DayPickerNavigation(props) {
   );
 }
 
-DayPickerNavigation.propTypes = propTypes;
-DayPickerNavigation.defaultProps = defaultProps;
+PickerNavigation.propTypes = propTypes;
+PickerNavigation.defaultProps = defaultProps;

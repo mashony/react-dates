@@ -7,7 +7,7 @@ import cx from 'classnames';
 
 import OutsideClickHandler from './OutsideClickHandler';
 import CalendarYearGrid from './CalendarYearGrid';
-import MonthPickerNavigation from './MonthPickerNavigation';
+import PickerNavigation from './PickerNavigation';
 
 import getTransformStyles from '../utils/getTransformStyles';
 
@@ -40,8 +40,8 @@ const propTypes = {
   onMonthTouchStart: PropTypes.func,
   onMonthTouchEnd: PropTypes.func,
   onMonthTouchTap: PropTypes.func,
-  onPrevYearClick: PropTypes.func,
-  onNextYearClick: PropTypes.func,
+  onPrevClick: PropTypes.func,
+  onNextClick: PropTypes.func,
   onOutsideClick: PropTypes.func,
 
   // i18n
@@ -68,8 +68,8 @@ const defaultProps = {
   onMonthTouchStart() {},
   onMonthTouchTap() {},
   onMonthTouchEnd() {},
-  onPrevYearClick() {},
-  onNextYearClick() {},
+  onPrevClick() {},
+  onNextClick() {},
   onOutsideClick() {},
 
   yearFormat: 'YYYY',
@@ -86,8 +86,8 @@ export default class MonthPicker extends React.Component {
       translationValue: 0,
     };
 
-    this.onPrevYearClick = this.onPrevYearClick.bind(this);
-    this.onNextYearClick = this.onNextYearClick.bind(this);
+    this.onPrevClick = this.onPrevClick.bind(this);
+    this.onNextClick = this.onNextClick.bind(this);
     this.updateStateAfterYearTransition = this.updateStateAfterYearTransition.bind(this);
   }
 
@@ -126,11 +126,11 @@ export default class MonthPicker extends React.Component {
     }
   }
 
-  onPrevYearClick(e) {
+  onPrevClick(e) {
     if (e) e.preventDefault();
 
-    if (this.props.onPrevYearClick) {
-      this.props.onPrevYearClick(e);
+    if (this.props.onPrevClick) {
+      this.props.onPrevClick(e);
     }
 
     const translationValue =
@@ -150,10 +150,10 @@ export default class MonthPicker extends React.Component {
     });
   }
 
-  onNextYearClick(e) {
+  onNextClick(e) {
     if (e) e.preventDefault();
-    if (this.props.onNextYearClick) {
-      this.props.onNextYearClick(e);
+    if (this.props.onNextClick) {
+      this.props.onNextClick(e);
     }
 
     const translationValue =
@@ -304,9 +304,9 @@ export default class MonthPicker extends React.Component {
     } = this.props;
 
     return (
-      <MonthPickerNavigation
-        onPrevYearClick={this.onPrevYearClick}
-        onNextYearClick={this.onNextYearClick}
+      <PickerNavigation
+        onPrevClick={this.onPrevClick}
+        onNextClick={this.onNextClick}
         navPrev={navPrev}
         navNext={navNext}
         isVertical={this.isVertical()}

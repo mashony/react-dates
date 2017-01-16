@@ -1,7 +1,7 @@
 @import 'variables';
 
-.DayPickerNavigation__prev,
-.DayPickerNavigation__next {
+.PickerNavigation__prev,
+.PickerNavigation__next {
   cursor: pointer;
   line-height: 0.78;
   -webkit-user-select: none; /* Chrome/Safari */
@@ -10,8 +10,8 @@
   user-select: none;
 }
 
-.DayPickerNavigation__prev--default,
-.DayPickerNavigation__next--default {
+.PickerNavigation__prev--default,
+.PickerNavigation__next--default {
   border: 1px solid $react-dates-color-border-light;
   background-color: $react-dates-color-white;
   color: $react-dates-color-placeholder-text;
@@ -26,11 +26,11 @@
   }
 }
 
-.DayPickerNavigation--horizontal {
+.PickerNavigation--horizontal {
   position: relative;
 
-  .DayPickerNavigation__prev,
-  .DayPickerNavigation__next {
+  .PickerNavigation__prev,
+  .PickerNavigation__next {
     border-radius: 3px;
     padding: 6px 9px;
     top: 18px;
@@ -38,16 +38,16 @@
     position: absolute;
   }
 
-  .DayPickerNavigation__prev {
+  .PickerNavigation__prev {
     left: 22px;
   }
 
-  .DayPickerNavigation__next {
+  .PickerNavigation__next {
     right: 22px;
   }
 
-  .DayPickerNavigation__prev--default,
-  .DayPickerNavigation__next--default {
+  .PickerNavigation__prev--default,
+  .PickerNavigation__next--default {
     svg {
       height: 19px;
       width: 19px;
@@ -56,7 +56,7 @@
   }
 }
 
-.DayPickerNavigation--vertical {
+.PickerNavigation--vertical {
   background: $react-dates-color-white;
   box-shadow: 0 0 5px 2px rgba(0, 0, 0, 0.1);
   position: absolute;
@@ -66,20 +66,20 @@
   width: 100%;
   z-index: 2;
 
-  .DayPickerNavigation__prev,
-  .DayPickerNavigation__next {
+  .PickerNavigation__prev,
+  .PickerNavigation__next {
     display: inline-block;
     position: relative;
     height: 100%;
     width: 50%;
   }
 
-  .DayPickerNavigation__next--default {
+  .PickerNavigation__next--default {
     border-left: 0;
   }
 
-  .DayPickerNavigation__prev--default,
-  .DayPickerNavigation__next--default {
+  .PickerNavigation__prev--default,
+  .PickerNavigation__next--default {
     text-align: center;
     font-size: 2.5em;
     padding: 5px;
