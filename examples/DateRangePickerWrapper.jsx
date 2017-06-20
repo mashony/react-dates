@@ -1,10 +1,12 @@
-import React, { PropTypes } from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
 import momentPropTypes from 'react-moment-proptypes';
 import moment from 'moment';
-import omit from 'lodash.omit';
+import omit from 'lodash/omit';
 
 import DateRangePicker from '../src/components/DateRangePicker';
 
+import { DateRangePickerPhrases } from '../src/defaultPhrases';
 import DateRangePickerShape from '../src/shapes/DateRangePickerShape';
 import { START_DATE, END_DATE, HORIZONTAL_ORIENTATION, ANCHOR_LEFT } from '../constants';
 import isInclusivelyAfterDay from '../src/utils/isInclusivelyAfterDay';
@@ -44,8 +46,10 @@ const defaultProps = {
   showDefaultInputIcon: false,
   customInputIcon: null,
   customArrowIcon: null,
+  customCloseIcon: null,
 
   // calendar presentation and interaction related props
+  renderMonth: null,
   orientation: HORIZONTAL_ORIENTATION,
   anchorDirection: ANCHOR_LEFT,
   horizontalMargin: 0,
@@ -55,6 +59,7 @@ const defaultProps = {
   numberOfMonths: 2,
   keepOpenOnDateSelect: false,
   reopenPickerOnClearDates: false,
+  isRTL: false,
 
   // navigation related props
   navPrev: null,
@@ -73,10 +78,7 @@ const defaultProps = {
   // internationalization
   displayFormat: () => moment.localeData().longDateFormat('L'),
   monthFormat: 'MMMM YYYY',
-  phrases: {
-    closeDatePicker: 'Close',
-    clearDates: 'Clear Dates',
-  },
+  phrases: DateRangePickerPhrases,
 };
 
 class DateRangePickerWrapper extends React.Component {
@@ -111,6 +113,9 @@ class DateRangePickerWrapper extends React.Component {
   render() {
     const { focusedInput, startDate, endDate } = this.state;
 
+    // autoFocus, autoFocusEndDate, initialStartDate and initialEndDate are helper props for the
+    // example wrapper but are not props on the SingleDatePicker itself and
+    // thus, have to be omitted.
     const props = omit(this.props, [
       'autoFocus',
       'autoFocusEndDate',

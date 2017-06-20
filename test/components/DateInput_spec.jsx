@@ -5,6 +5,8 @@ import sinon from 'sinon-sandbox';
 
 import DateInput from '../../src/components/DateInput';
 
+const event = { preventDefault() {}, stopPropagation() {} };
+
 describe('DateInput', () => {
   describe('#render', () => {
     it('is .DateInput class', () => {
@@ -60,6 +62,20 @@ describe('DateInput', () => {
           expect(wrapper.find('input').props().value).to.equal(DATE_STRING);
         },
       );
+
+      describe('props.readOnly is truthy', () => {
+        it('sets readOnly', () => {
+          const wrapper = shallow(<DateInput id="date" readOnly />);
+          expect(!!wrapper.find('input').prop('readOnly')).to.equal(true);
+        });
+      });
+
+      describe('props.readOnly is falsey', () => {
+        it('does not set readOnly', () => {
+          const wrapper = shallow(<DateInput id="date" readOnly={false} />);
+          expect(!!wrapper.find('input').prop('readOnly')).to.equal(false);
+        });
+      });
     });
 
     describe('screen reader message', () => {
@@ -181,13 +197,25 @@ describe('DateInput', () => {
       wrapper.instance().onChange(evt);
       expect(onChangeStub.getCall(0).args[0]).to.equal(evt.target.value);
     });
+
+    it('calls props.onKeyDownQuestionMark if last typed character is ?', () => {
+      const onKeyDownQuestionMarkStub = sinon.stub();
+      const wrapper = shallow(
+        <DateInput
+          id="date"
+          onKeyDownQuestionMark={onKeyDownQuestionMarkStub}
+        />,
+      );
+      wrapper.instance().onChange({ target: { value: 'foobar?' } });
+      expect(onKeyDownQuestionMarkStub.callCount).to.equal(1);
+    });
   });
 
   describe('#onKeyDown', () => {
     it('calls props.onKeyDownTab if e.key === `Tab` and e.shiftKey === false', () => {
       const onKeyDownTabStub = sinon.stub();
       const wrapper = shallow(<DateInput id="date" onKeyDownTab={onKeyDownTabStub} />);
-      wrapper.instance().onKeyDown({ key: 'Tab', shiftKey: false });
+      wrapper.instance().onKeyDown({ ...event, key: 'Tab', shiftKey: false });
       expect(onKeyDownTabStub.callCount).to.equal(1);
     });
 
@@ -195,15 +223,127 @@ describe('DateInput', () => {
       const onKeyDownShiftTabStub = sinon.stub();
       const wrapper =
         shallow(<DateInput id="date" onKeyDownShiftTab={onKeyDownShiftTabStub} />);
-      wrapper.instance().onKeyDown({ key: 'Tab', shiftKey: true });
+      wrapper.instance().onKeyDown({ ...event, key: 'Tab', shiftKey: true });
       expect(onKeyDownShiftTabStub.callCount).to.equal(1);
     });
 
     it('does not call props.onKeyDownTab if e.key !== `Tab`', () => {
       const onKeyDownTabStub = sinon.stub();
       const wrapper = shallow(<DateInput id="date" onKeyDownTab={onKeyDownTabStub} />);
-      wrapper.instance().onKeyDown({ key: 'foo' });
+      wrapper.instance().onKeyDown({ ...event, key: 'foo' });
       expect(onKeyDownTabStub.callCount).to.equal(0);
     });
+
+    it('calls props.onKeyDownArrowDown if e.key === `ArrowDown`', () => {
+      const onKeyDownArrowDownStub = sinon.stub();
+      const wrapper = shallow(<DateInput id="date" onKeyDownArrowDown={onKeyDownArrowDownStub} />);
+      wrapper.instance().onKeyDown({ ...event, key: 'ArrowDown' });
+      expect(onKeyDownArrowDownStub.callCount).to.equal(1);
+    });
+
+    it('does not call props.onKeyDownArrowDown if e.key !== `ArrowDown`', () => {
+      const onKeyDownArrowDownStub = sinon.stub();
+      const wrapper = shallow(<DateInput id="date" onKeyDownArrowDown={onKeyDownArrowDownStub} />);
+      wrapper.instance().onKeyDown({ ...event, key: 'foo' });
+      expect(onKeyDownArrowDownStub.callCount).to.equal(0);
+    });
+
+    it('calls props.onKeyDownQuestionMark if e.key === `?`', () => {
+      const onKeyDownQuestionMarkStub = sinon.stub();
+      const wrapper = shallow(
+        <DateInput id="date" onKeyDownQuestionMark={onKeyDownQuestionMarkStub} />,
+      );
+      wrapper.instance().onKeyDown({ ...event, key: '?' });
+      expect(onKeyDownQuestionMarkStub.callCount).to.equal(1);
+    });
+
+    it('does not call props.onKeyDownQuestionMark if e.key !== `?`', () => {
+      const onKeyDownQuestionMarkStub = sinon.stub();
+      const wrapper = shallow(
+        <DateInput id="date" onKeyDownQuestionMark={onKeyDownQuestionMarkStub} />,
+      );
+      wrapper.instance().onKeyDown({ ...event, key: 'foo' });
+      expect(onKeyDownQuestionMarkStub.callCount).to.equal(0);
+    });
+  });
+
+  describe('touch device detection', () => {
+    it('indicates no touch support on the client', () => {
+      const wrapper = shallow(<DateInput id="date" />);
+      expect(wrapper.state()).to.contain.keys({ isTouchDevice: false });
+    });
+
+    it('sets readOnly when a touch device and props.readOnly === true', () => {
+      const wrapper = shallow(<DateInput id="date" readOnly />);
+      wrapper.setState({ isTouchDevice: true });
+      wrapper.update();
+      expect(!!wrapper.find('input').prop('readOnly')).to.equal(true);
+    });
+
+    it('sets readOnly when a touch device and props.readOnly === false', () => {
+      const wrapper = shallow(<DateInput id="date" readOnly={false} />);
+      wrapper.setState({ isTouchDevice: true });
+      wrapper.update();
+      expect(!!wrapper.find('input').prop('readOnly')).to.equal(true);
+    });
+
+    describe('focus/isFocused', () => {
+      const el = {
+        blur() {},
+        focus() {},
+        select() {},
+      };
+
+      beforeEach(() => {
+        sinon.spy(el, 'blur');
+        sinon.spy(el, 'focus');
+        sinon.spy(el, 'select');
+      });
+
+      afterEach(() => {
+        sinon.restore();
+      });
+
+      it('focuses and selects inputRef when becoming focused', () => {
+        const wrapper = shallow(
+          <DateInput id="date" focused={false} isFocused={false} />,
+          { lifecycleExperimental: true },
+        );
+
+        wrapper.instance().inputRef = el;
+
+        wrapper.setProps({ focused: true, isFocused: true });
+
+        expect(el.blur).to.have.property('callCount', 0);
+        expect(el.focus).to.have.property('callCount', 1);
+        expect(el.select).to.have.property('callCount', 1);
+      });
+
+      it('blurs when becoming unfocused', () => {
+        const wrapper = shallow(
+          <DateInput id="date" focused isFocused />,
+          { lifecycleExperimental: true },
+        );
+
+        wrapper.instance().inputRef = el;
+
+        wrapper.setProps({ focused: false, isFocused: false });
+
+        expect(el.blur).to.have.property('callCount', 1);
+        expect(el.focus).to.have.property('callCount', 0);
+        expect(el.select).to.have.property('callCount', 0);
+      });
+    });
+
+    /*
+      // Skip this test until we can figure out how to use `withTouchSupport` with karma
+      wrap()
+      .withTouchSupport()
+      .it('sets isTouchDevice state when is a touch device', () => {
+        const wrapper = shallow(<DateInput id="date" />);
+        wrapper.instance().componentDidMount();
+        expect(wrapper.state()).to.contain.keys({ isTouchDevice: true });
+      });
+    */
   });
 });

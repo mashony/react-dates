@@ -38,3 +38,9 @@ lib
 
 # gh-pages
 _gh-pages
+
+.nyc_output
+
+# Only apps should have lockfiles
+yarn.lock
+package-lock.json

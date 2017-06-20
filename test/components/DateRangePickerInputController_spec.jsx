@@ -12,7 +12,6 @@ import DateRangePickerInput from '../../src/components/DateRangePickerInput';
 import isSameDay from '../../src/utils/isSameDay';
 
 import {
-  VERTICAL_ORIENTATION,
   START_DATE,
   END_DATE,
 } from '../../constants';
@@ -89,6 +88,25 @@ describe('DateRangePickerInputController', () => {
       const wrapper = shallow(<DateRangePickerInputController onFocusChange={onFocusChangeStub} />);
       wrapper.instance().onClearFocus();
       expect(onFocusChangeStub.calledWith(null)).to.equal(true);
+    });
+
+    it('calls props.onClose with startDate and endDate args', () => {
+      const onCloseStub = sinon.stub();
+      const endDate = moment(today).add(1, 'days');
+
+      const wrapper = shallow(
+        <DateRangePickerInputController
+          onFocusChange={() => null}
+          onClose={onCloseStub}
+          startDate={today}
+          endDate={endDate}
+        />,
+      );
+
+      wrapper.instance().onClearFocus();
+      const args = onCloseStub.getCall(0).args[0];
+      expect(args.startDate).to.equal(today);
+      expect(args.endDate).to.equal(endDate);
     });
   });
 
@@ -579,13 +597,12 @@ describe('DateRangePickerInputController', () => {
       });
     });
 
-    describe('props.startDate = moment and props.orientation = VERTICAL_ORIENTATION', () => {
+    describe('props.startDate = moment', () => {
       it('calls props.onFocusChange once with arg END_DATE', () => {
         const onFocusChangeStub = sinon.stub();
         const wrapper = shallow(
           <DateRangePickerInputController
             startDate={moment(today)}
-            orientation={VERTICAL_ORIENTATION}
             onFocusChange={onFocusChangeStub}
           />,
         );

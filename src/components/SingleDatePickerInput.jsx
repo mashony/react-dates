@@ -1,9 +1,14 @@
-import React, { PropTypes } from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
 import { forbidExtraProps } from 'airbnb-prop-types';
 import cx from 'classnames';
 
+import { SingleDatePickerInputPhrases } from '../defaultPhrases';
+import getPhrasePropTypes from '../utils/getPhrasePropTypes';
+
 import DateInput from './DateInput';
 import CloseButton from '../svg/close.svg';
+import CalendarIcon from '../svg/calendar.svg';
 
 const propTypes = forbidExtraProps({
   id: PropTypes.string.isRequired,
@@ -12,21 +17,25 @@ const propTypes = forbidExtraProps({
   inputValue: PropTypes.string,
   screenReaderMessage: PropTypes.string,
   focused: PropTypes.bool,
+  isFocused: PropTypes.bool, // describes actual DOM focus
   disabled: PropTypes.bool,
   required: PropTypes.bool,
+  readOnly: PropTypes.bool,
   showCaret: PropTypes.bool,
   showClearDate: PropTypes.bool,
-
+  customCloseIcon: PropTypes.node,
+  showDefaultInputIcon: PropTypes.bool,
+  customInputIcon: PropTypes.node,
+  isRTL: PropTypes.bool,
   onChange: PropTypes.func,
   onClearDate: PropTypes.func,
   onFocus: PropTypes.func,
   onKeyDownShiftTab: PropTypes.func,
   onKeyDownTab: PropTypes.func,
+  onKeyDownArrowDown: PropTypes.func,
 
   // i18n
-  phrases: PropTypes.shape({
-    clearDate: PropTypes.node,
-  }),
+  phrases: PropTypes.shape(getPhrasePropTypes(SingleDatePickerInputPhrases)),
 });
 
 const defaultProps = {
@@ -35,21 +44,26 @@ const defaultProps = {
   inputValue: '',
   screenReaderMessage: '',
   focused: false,
+  isFocused: false,
   disabled: false,
   required: false,
+  readOnly: false,
   showCaret: false,
   showClearDate: false,
+  showDefaultInputIcon: false,
+  customCloseIcon: null,
+  customInputIcon: null,
+  isRTL: false,
 
   onChange() {},
   onClearDate() {},
   onFocus() {},
   onKeyDownShiftTab() {},
   onKeyDownTab() {},
+  onKeyDownArrowDown() {},
 
   // i18n
-  phrases: {
-    clearDate: 'Clear Date',
-  },
+  phrases: SingleDatePickerInputPhrases,
 };
 
 export default class SingleDatePickerInput extends React.Component {
@@ -83,55 +97,82 @@ export default class SingleDatePickerInput extends React.Component {
       displayValue,
       inputValue,
       focused,
+      isFocused,
       disabled,
       required,
+      readOnly,
       showCaret,
       showClearDate,
+      showDefaultInputIcon,
       phrases,
       onClearDate,
       onChange,
       onFocus,
       onKeyDownShiftTab,
       onKeyDownTab,
+      onKeyDownArrowDown,
       screenReaderMessage,
+      customCloseIcon,
+      customInputIcon,
+      isRTL,
     } = this.props;
 
+    const inputIcon = customInputIcon || (<CalendarIcon />);
+    const closeIcon = customCloseIcon || (<CloseButton />);
+    const screenReaderText = screenReaderMessage || phrases.keyboardNavigationInstructions;
+
     return (
-      <div className="SingleDatePickerInput">
+      <div
+        className={cx('SingleDatePickerInput', {
+          'SingleDatePickerInput--rtl': isRTL,
+        })}
+      >
+        {(showDefaultInputIcon || customInputIcon !== null) && (
+          <button
+            type="button"
+            className="SingleDatePickerInput__calendar-icon"
+            aria-label={phrases.focusStartDate}
+            onClick={onFocus}
+          >
+            {inputIcon}
+          </button>
+        )}
         <DateInput
           id={id}
           placeholder={placeholder} // also used as label
           displayValue={displayValue}
           inputValue={inputValue}
-          screenReaderMessage={screenReaderMessage}
+          screenReaderMessage={screenReaderText}
           focused={focused}
+          isFocused={isFocused}
           disabled={disabled}
           required={required}
+          readOnly={readOnly}
           showCaret={showCaret}
-
           onChange={onChange}
           onFocus={onFocus}
           onKeyDownShiftTab={onKeyDownShiftTab}
           onKeyDownTab={onKeyDownTab}
+          onKeyDownArrowDown={onKeyDownArrowDown}
         />
 
-        {showClearDate &&
+        {showClearDate && (
           <button
             type="button"
             className={cx('SingleDatePickerInput__clear-date', {
               'SingleDatePickerInput__clear-date--hide': !displayValue,
               'SingleDatePickerInput__clear-date--hover': isClearDateHovered,
             })}
+            aria-label={phrases.clearDate}
             onMouseEnter={this.onClearDateMouseEnter}
             onMouseLeave={this.onClearDateMouseLeave}
             onClick={onClearDate}
           >
-            <span className="screen-reader-only">
-              {phrases.clearDate}
-            </span>
-            <CloseButton />
+            <div className="DateRangePickerInput__close">
+              {closeIcon}
+            </div>
           </button>
-        }
+        )}
       </div>
     );
   }

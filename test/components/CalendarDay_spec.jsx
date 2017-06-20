@@ -4,7 +4,7 @@ import sinon from 'sinon-sandbox';
 import { shallow } from 'enzyme';
 import moment from 'moment';
 
-import CalendarDay, { getModifiersForDay } from '../../src/components/CalendarDay';
+import CalendarDay from '../../src/components/CalendarDay';
 
 describe('CalendarDay', () => {
   describe('#render', () => {
@@ -36,6 +36,19 @@ describe('CalendarDay', () => {
       const wrapper = shallow(<CalendarDay renderDay={renderDay} />);
       expect(wrapper.text()).to.equal(dayName);
     });
+
+    describe('button', () => {
+      it('contains a button', () => {
+        const wrapper = shallow(<CalendarDay />);
+        expect(wrapper.find('button')).to.have.lengthOf(1);
+      });
+
+      it('has tabIndex equal to props.tabIndex', () => {
+        const tabIndex = -1;
+        const wrapper = shallow(<CalendarDay tabIndex={tabIndex} />);
+        expect(wrapper.find('button').props().tabIndex).to.equal(tabIndex);
+      });
+    });
   });
 
   describe('#onDayClick', () => {
@@ -49,7 +62,7 @@ describe('CalendarDay', () => {
     });
 
     it('gets triggered by click', () => {
-      const wrapper = shallow(<CalendarDay />);
+      const wrapper = shallow(<CalendarDay />).find('button');
       wrapper.simulate('click');
       expect(onDayClickSpy).to.have.property('callCount', 1);
     });
@@ -73,7 +86,7 @@ describe('CalendarDay', () => {
     });
 
     it('gets triggered by mouseenter', () => {
-      const wrapper = shallow(<CalendarDay />);
+      const wrapper = shallow(<CalendarDay />).find('button');
       wrapper.simulate('mouseenter');
       expect(onDayMouseEnterSpy).to.have.property('callCount', 1);
     });
@@ -97,7 +110,7 @@ describe('CalendarDay', () => {
     });
 
     it('gets triggered by mouseleave', () => {
-      const wrapper = shallow(<CalendarDay />);
+      const wrapper = shallow(<CalendarDay />).find('button');
       wrapper.simulate('mouseleave');
       expect(onDayMouseLeaveSpy).to.have.property('callCount', 1);
     });
@@ -107,35 +120,6 @@ describe('CalendarDay', () => {
       const wrapper = shallow(<CalendarDay onDayMouseLeave={onMouseLeaveStub} />);
       wrapper.instance().onDayMouseLeave();
       expect(onMouseLeaveStub).to.have.property('callCount', 1);
-    });
-  });
-
-  describe('#getModifiersForDay', () => {
-    it('returns empty array if day is not passed in', () => {
-      const modifierKey = 'foo';
-      const modifiers = {};
-      modifiers[modifierKey] = () => true;
-
-      const filteredModifiers = getModifiersForDay(modifiers);
-      expect(filteredModifiers).to.have.lengthOf(0);
-    });
-
-    it('returns key for true modifier', () => {
-      const modifierKey = 'foo';
-      const modifiers = {};
-      modifiers[modifierKey] = () => true;
-
-      const filteredModifiers = getModifiersForDay(modifiers, moment());
-      expect(filteredModifiers).to.include(modifierKey);
-    });
-
-    it('does not return key for false modifier', () => {
-      const modifierKey = 'foo';
-      const modifiers = {};
-      modifiers[modifierKey] = () => false;
-
-      const filteredModifiers = getModifiersForDay(modifiers, moment());
-      expect(filteredModifiers).not.to.include(modifierKey);
     });
   });
 });

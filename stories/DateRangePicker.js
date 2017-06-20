@@ -1,24 +1,9 @@
 import React from 'react';
 import moment from 'moment';
+import momentJalaali from 'moment-jalaali';
 import { storiesOf } from '@kadira/storybook';
 
-import { VERTICAL_ORIENTATION, ANCHOR_RIGHT } from '../constants';
-
-import isSameDay from '../src/utils/isSameDay';
-import isInclusivelyAfterDay from '../src/utils/isInclusivelyAfterDay';
-
 import DateRangePickerWrapper from '../examples/DateRangePickerWrapper';
-
-const datesList = [
-  moment(),
-  moment().add(1, 'days'),
-  moment().add(3, 'days'),
-  moment().add(9, 'days'),
-  moment().add(10, 'days'),
-  moment().add(11, 'days'),
-  moment().add(12, 'days'),
-  moment().add(13, 'days'),
-];
 
 const TestInput = props => (
   <div style={{ marginTop: 16 }}>
@@ -34,58 +19,6 @@ const TestInput = props => (
       }}
     />
   </div>
-);
-
-const TestPrevIcon = () => (
-  <span
-    style={{
-      border: '1px solid #dce0e0',
-      backgroundColor: '#fff',
-      color: '#484848',
-      padding: '3px',
-    }}
-  >
-    Prev
-  </span>
-);
-
-const TestNextIcon = () => (
-  <span
-    style={{
-      border: '1px solid #dce0e0',
-      backgroundColor: '#fff',
-      color: '#484848',
-      padding: '3px',
-    }}
-  >
-    Next
-  </span>
-);
-
-const TestCustomInputIcon = () => (
-  <span
-    style={{
-      border: '1px solid #dce0e0',
-      backgroundColor: '#fff',
-      color: '#484848',
-      padding: '3px',
-    }}
-  >
-    C
-  </span>
-);
-
-const TestCustomArrowIcon = () => (
-  <span
-    style={{
-      border: '1px solid #dce0e0',
-      backgroundColor: '#fff',
-      color: '#484848',
-      padding: '3px',
-    }}
-  >
-    ->
-  </span>
 );
 
 class TestWrapper extends React.Component {
@@ -143,6 +76,16 @@ storiesOf('DateRangePicker (DRP)', module)
           closeDatePicker: '关闭',
           clearDates: '清除日期',
         }}
+      />
+    );
+  })
+  .addWithInfo('non-english locale (Persian)', () => {
+    moment.locale('fa');
+    return (
+      <DateRangePickerWrapper
+        placeholder="تقویم فارسی"
+        renderMonth={month => momentJalaali(month).format('jMMMM jYYYY')}
+        renderDay={day => momentJalaali(day).format('jD')}
       />
     );
   });

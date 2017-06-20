@@ -13,6 +13,11 @@ describe('DateRangePickerInput', () => {
       expect(wrapper.is('.DateRangePickerInput')).to.equal(true);
     });
 
+    it('is .DateRangePickerInput--rtl class', () => {
+      const wrapper = shallow(<DateRangePickerInput isRTL />);
+      expect(wrapper.is('.DateRangePickerInput--rtl')).to.equal(true);
+    });
+
     it('renders 2 <DateInput /> components', () => {
       const wrapper = shallow(<DateRangePickerInput />);
       expect(wrapper.find(DateInput)).to.have.lengthOf(2);
@@ -20,14 +25,14 @@ describe('DateRangePickerInput', () => {
 
     describe('props.disabled is falsey', () => {
       it('does not have .DateRangePickerInput--disabled class ', () => {
-        const wrapper = shallow(<DateRangePickerInput id="date" disabled={false} />);
+        const wrapper = shallow(<DateRangePickerInput disabled={false} />);
         expect(wrapper.find('.DateRangePickerInput--disabled')).to.have.lengthOf(0);
       });
     });
 
     describe('props.disabled is truthy', () => {
       it('has .DateRangePickerInput--disabled class', () => {
-        const wrapper = shallow(<DateRangePickerInput id="date" disabled />);
+        const wrapper = shallow(<DateRangePickerInput disabled />);
         expect(wrapper.find('.DateRangePickerInput--disabled')).to.have.lengthOf(1);
       });
     });
@@ -101,7 +106,7 @@ describe('DateRangePickerInput', () => {
             <DateRangePickerInput
               customInputIcon={<span className="custom-icon" />}
             />);
-          expect(wrapper.find('.DateRangePickerInput__calendar-icon .custom-icon'));
+          expect(wrapper.find('.DateRangePickerInput__calendar-icon .custom-icon')).to.have.lengthOf(1);
         });
       });
     });
@@ -113,7 +118,18 @@ describe('DateRangePickerInput', () => {
         <DateRangePickerInput
           customArrowIcon={<span className="custom-arrow-icon" />}
         />);
-      expect(wrapper.find('.DateRangePickerInput__calendar-icon .custom-arrow-icon'));
+      expect(wrapper.find('.DateRangePickerInput .custom-arrow-icon')).to.have.lengthOf(1);
+    });
+  });
+
+  describe('props.customCloseIcon is a React Element', () => {
+    it('has custom icon', () => {
+      const wrapper = shallow(
+        <DateRangePickerInput
+          showClearDates
+          customCloseIcon={<span className="custom-close-icon" />}
+        />);
+      expect(wrapper.find('.DateRangePickerInput .custom-close-icon')).to.have.lengthOf(1);
     });
   });
 
@@ -184,16 +200,16 @@ describe('DateRangePickerInput', () => {
 
   describe('calendar icon interaction', () => {
     describe('onClick', () => {
-      it('props.onStartDateFocus gets triggered', () => {
-        const onStartDateFocusSpy = sinon.spy();
+      it('props.onArrowDown gets triggered', () => {
+        const onArrowDownSpy = sinon.spy();
         const wrapper = shallow(
           <DateRangePickerInput
-            onStartDateFocus={onStartDateFocusSpy}
+            onArrowDown={onArrowDownSpy}
             showDefaultInputIcon
           />);
         const calendarIconWrapper = wrapper.find('.DateRangePickerInput__calendar-icon');
         calendarIconWrapper.simulate('click');
-        expect(onStartDateFocusSpy.called).to.equal(true);
+        expect(onArrowDownSpy.callCount).to.equal(1);
       });
     });
   });

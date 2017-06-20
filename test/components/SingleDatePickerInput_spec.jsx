@@ -11,6 +11,11 @@ describe('SingleDatePickerInput', () => {
       const wrapper = shallow(<SingleDatePickerInput id="date" />);
       expect(wrapper.is('.SingleDatePickerInput')).to.equal(true);
     });
+
+    it('is .SingleDatePickerInput--rtl class', () => {
+      const wrapper = shallow(<SingleDatePickerInput id="date" isRTL />);
+      expect(wrapper.is('.SingleDatePickerInput--rtl')).to.equal(true);
+    });
   });
 
   describe('clear date', () => {
@@ -53,6 +58,43 @@ describe('SingleDatePickerInput', () => {
             shallow(<SingleDatePickerInput showClearDate displayValue="2016-07-13" />);
           expect(wrapper.find('.SingleDatePickerInput__clear-date--hide')).to.have.lengthOf(0);
         });
+    });
+
+    describe('props.customCloseIcon is a React Element', () => {
+      it('has custom icon', () => {
+        const wrapper = shallow(
+          <SingleDatePickerInput
+            showClearDate
+            customCloseIcon={<span className="custom-close-icon" />}
+          />);
+        expect(wrapper.find('.SingleDatePickerInput .custom-close-icon')).to.have.lengthOf(1);
+      });
+    });
+  });
+
+  describe('show calendar icon', () => {
+    describe('props.showInputIcon is falsey', () => {
+      it('does not have .SingleDatePickerInput__calendar-icon class', () => {
+        const wrapper = shallow(<SingleDatePickerInput showDefaultInputIcon={false} />);
+        expect(wrapper.find('.SingleDatePickerInput__calendar-icon')).to.have.lengthOf(0);
+      });
+    });
+
+    describe('props.showInputIcon is truthy', () => {
+      it('has .SingleDatePickerInput__calendar-icon class', () => {
+        const wrapper = shallow(<SingleDatePickerInput showDefaultInputIcon />);
+        expect(wrapper.find('.SingleDatePickerInput__calendar-icon')).to.have.lengthOf(1);
+      });
+    });
+
+    describe('props.customInputIcon is a React Element', () => {
+      it('has custom icon', () => {
+        const wrapper = shallow(
+          <SingleDatePickerInput
+            customInputIcon={<span className="custom-icon" />}
+          />);
+        expect(wrapper.find('.SingleDatePickerInput__calendar-icon .custom-icon')).to.have.lengthOf(1);
+      });
     });
   });
 

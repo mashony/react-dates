@@ -32,6 +32,18 @@ const TestNextIcon = () => (
   </span>
 );
 
+const TestCustomInfoPanel = () => (
+  <div
+    style={{
+      padding: '10px 21px',
+      borderTop: '1px solid #dce0e0',
+      color: '#484848',
+    }}
+  >
+    &#x2755; Some useful info here
+  </div>
+);
+
 storiesOf('SDP - Calendar Props', module)
   .addWithInfo('default', () => (
     <SingleDatePickerWrapper autoFocus />
@@ -41,6 +53,9 @@ storiesOf('SDP - Calendar Props', module)
       numberOfMonths={1}
       autoFocus
     />
+  ))
+  .addWithInfo('with custom day size', () => (
+    <SingleDatePickerWrapper daySize={50} autoFocus />
   ))
   .addWithInfo('anchored right', () => (
     <div style={{ float: 'right' }}>
@@ -80,7 +95,7 @@ storiesOf('SDP - Calendar Props', module)
   ))
   .addWithInfo('with month specified on open', () => (
     <SingleDatePickerWrapper
-      initialVisibleMonth={() => moment('01 2017', 'MM YYYY')}
+      initialVisibleMonth={() => moment().add(10, 'months')}
       autoFocus
     />
   ))
@@ -95,6 +110,26 @@ storiesOf('SDP - Calendar Props', module)
     <SingleDatePickerWrapper
       numberOfMonths={1}
       enableOutsideDays
+      autoFocus
+    />
+  ))
+  .addWithInfo('with info panel', () => (
+    <SingleDatePickerWrapper
+      renderCalendarInfo={() => (
+        <TestCustomInfoPanel />
+      )}
+      autoFocus
+    />
+  ))
+  .addWithInfo('with keyboard shorcuts panel hidden', () => (
+    <SingleDatePickerWrapper
+      hideKeyboardShortcutsPanel
+      autoFocus
+    />
+  ))
+  .addWithInfo('with RTL support', () => (
+    <SingleDatePickerWrapper
+      isRTL
       autoFocus
     />
   ));

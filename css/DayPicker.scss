@@ -23,6 +23,11 @@
   position: initial;
 }
 
+// we can revisit this styling during the a11y picker
+.DayPicker__focus-region {
+  outline: none;
+}
+
 .DayPicker__week-headers {
   position: relative;
 }
@@ -34,9 +39,8 @@
 .DayPicker__week-header {
   color: $react-dates-color-placeholder-text;
   position: absolute;
-  width: $react-dates-width-day-picker;
   top: 62px;
-  z-index: 2;
+  z-index: $react-dates-z-index + 2;
   padding: 0 13px;
   text-align: left;
 
@@ -44,17 +48,16 @@
     list-style: none;
     margin: 1px 0;
     padding-left: 0;
+    padding-right: 0;
   }
 
   li {
     display: inline-block;
-    width: 39px;
     text-align: center;
   }
 }
 
 .DayPicker--vertical .DayPicker__week-header {
-  margin-left: -1 * $react-dates-width-day-picker / 2;
   left: 50%;
 }
 
