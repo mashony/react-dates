@@ -1,116 +1,151 @@
 /* eslint react/no-array-index-key: 0 */
 
-import React, { PropTypes } from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
+import shallowCompare from 'react-addons-shallow-compare';
+import momentPropTypes from 'react-moment-proptypes';
+import { forbidExtraProps, nonNegativeInteger } from 'airbnb-prop-types';
 import moment from 'moment';
 import cx from 'classnames';
 
-import CalendarMonthOption from './CalendarMonthOption';
+import { CalendarMonthPhrases } from '../defaultPhrases';
+import getPhrasePropTypes from '../utils/getPhrasePropTypes';
+
+import CalendarYearMonth from './CalendarYearMonth';
 
 import getCalendarYearMonths from '../utils/getCalendarYearMonths';
+import isSameMonth from '../utils/isSameMonth';
+import toISODateString from '../utils/toISODateString';
 
-import OrientationShape from '../shapes/OrientationShape';
+import ScrollableOrientationShape from '../shapes/ScrollableOrientationShape';
 
-import { HORIZONTAL_ORIENTATION, VERTICAL_ORIENTATION } from '../../constants';
+import {
+  HORIZONTAL_ORIENTATION,
+  VERTICAL_ORIENTATION,
+  VERTICAL_SCROLLABLE,
+  MONTH_SIZE,
+} from '../../constants';
 
-const propTypes = {
-  year: PropTypes.func,
+const propTypes = forbidExtraProps({
+  year: momentPropTypes.momentObj,
   isVisible: PropTypes.bool,
   modifiers: PropTypes.object,
-  orientation: OrientationShape,
+  orientation: ScrollableOrientationShape,
+  monthSize: nonNegativeInteger,
   onMonthClick: PropTypes.func,
-  onMonthMouseDown: PropTypes.func,
-  onMonthMouseUp: PropTypes.func,
   onMonthMouseEnter: PropTypes.func,
   onMonthMouseLeave: PropTypes.func,
-  onMonthTouchStart: PropTypes.func,
-  onMonthTouchEnd: PropTypes.func,
-  onMonthTouchTap: PropTypes.func,
+  renderYear: PropTypes.func,
+  renderMonth: PropTypes.func,
+
+  focusedDate: momentPropTypes.momentObj, // indicates focusable day
+  isFocused: PropTypes.bool, // indicates whether or not to move focus to focusable day
+
+  // i18n
   yearFormat: PropTypes.string,
-};
+  phrases: PropTypes.shape(getPhrasePropTypes(CalendarMonthPhrases)),
+});
 
 const defaultProps = {
-  year: () => moment(),
+  year: moment(),
   isVisible: true,
   modifiers: {},
   orientation: HORIZONTAL_ORIENTATION,
+  monthSize: MONTH_SIZE,
   onMonthClick() {},
-  onMonthMouseDown() {},
-  onMonthMouseUp() {},
   onMonthMouseEnter() {},
   onMonthMouseLeave() {},
-  onMonthTouchStart() {},
-  onMonthTouchEnd() {},
-  onMonthTouchTap() {},
-  yearFormat: 'YYYY',
+  renderYear: null,
+  renderMonth: null,
+
+  focusedDate: null,
+  isFocused: false,
+
+  // i18n
+  yearFormat: 'YYYY', // english locale
+  phrases: CalendarMonthPhrases,
 };
 
-export function getModifiersForMonth(modifiers, month) {
-  return month ? Object.keys(modifiers).filter(key => modifiers[key](month)) : [];
-}
+export default class CalendarYear extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      months: getCalendarYearMonths(props.year),
+    };
+  }
 
-const getThunkFromMoment = year => () => year;
+  componentWillReceiveProps(nextProps) {
+    const { year } = nextProps;
+    if (!year.isSame(this.props.month)) {
+      this.setState({
+        weeks: getCalendarYearMonths(year),
+      });
+    }
+  }
 
-export default function CalendarYear(props) {
-  const {
-    year,
-    yearFormat,
-    orientation,
-    isVisible,
-    modifiers,
-    onMonthClick,
-    onMonthMouseDown,
-    onMonthMouseUp,
-    onMonthMouseEnter,
-    onMonthMouseLeave,
-    onMonthTouchStart,
-    onMonthTouchEnd,
-    onMonthTouchTap,
-  } = props;
+  shouldComponentUpdate(nextProps, nextState) {
+    return shallowCompare(this, nextProps, nextState);
+  }
 
-  const yearTitle = year().format(yearFormat);
-  const calendarYearClasses = cx('CalendarYear', {
-    'CalendarYear--horizontal': orientation === HORIZONTAL_ORIENTATION,
-    'CalendarYear--vertical': orientation === VERTICAL_ORIENTATION,
-  });
+  render() {
+    const {
+      year,
+      yearFormat,
+      orientation,
+      isVisible,
+      modifiers,
+      onMonthClick,
+      onMonthMouseEnter,
+      onMonthMouseLeave,
+      renderYear,
+      renderMonth,
+      monthSize,
+      focusedDate,
+      isFocused,
+      phrases,
+    } = this.props;
 
-  return (
-    <div className={calendarYearClasses} data-visible={isVisible}>
-      <table>
-        <caption className="CalendarYear__caption js-CalendarYear__caption">
-          <strong>{yearTitle}</strong>
-        </caption>
+    const { months } = this.state;
+    const yearTitle = renderYear ? renderYear(year) : year.format(yearFormat);
 
-        <tbody className="js-CalendarYear__grid">
-          {getCalendarYearMonths(year()).map((months, i) =>
-            <tr key={i}>
-              {months.map((month) => {
-                const modifiersForMonth = getModifiersForMonth(modifiers, month);
-                const className = cx('CalendarYear__month',
-                  modifiersForMonth.map(mod => `CalendarYear__month--${mod}`));
+    const calendarMonthClasses = cx('CalendarMonth', {
+      'CalendarYear--horizontal': orientation === HORIZONTAL_ORIENTATION,
+      'CalendarYear--vertical': orientation === VERTICAL_ORIENTATION,
+      'CalendarYear--vertical-scrollable': orientation === VERTICAL_SCROLLABLE,
+    });
 
-                return (
-                  <td className={className} key={month}>
-                    <CalendarMonthOption
-                      month={getThunkFromMoment(month)}
-                      modifiers={modifiersForMonth}
-                      onMonthMouseEnter={onMonthMouseEnter}
-                      onMonthMouseLeave={onMonthMouseLeave}
-                      onMonthMouseDown={onMonthMouseDown}
-                      onMonthMouseUp={onMonthMouseUp}
-                      onMonthClick={onMonthClick}
-                      onMonthTouchStart={onMonthTouchStart}
-                      onMonthTouchEnd={onMonthTouchEnd}
-                      onMonthTouchTap={onMonthTouchTap}
-                    />
-                  </td>
-                );
-              })}
-            </tr>,
-          )}
-        </tbody>
-      </table>
-    </div>
-  );
+    return (
+      <div className={calendarMonthClasses} data-visible={isVisible}>
+        <table>
+          <caption className="CalendarMonth__caption js-CalendarMonth__caption">
+            <strong>{yearTitle}</strong>
+          </caption>
+
+          <tbody className="js-CalendarMonth__grid">
+            {months.map((month, i) => (
+              <tr key={i}>
+                {month.map((day, dayOfWeek) => (
+                  <CalendarYearMonth
+                    month={month}
+                    monthSize={monthSize}
+                    tabIndex={isVisible && isSameMonth(month, focusedDate) ? 0 : -1}
+                    isFocused={isFocused}
+                    key={dayOfWeek}
+                    onMonthMouseEnter={onMonthMouseEnter}
+                    onMonthMouseLeave={onMonthMouseLeave}
+                    onMonthClick={onMonthClick}
+                    renderMonth={renderMonth}
+                    phrases={phrases}
+                    modifiers={modifiers[toISODateString(day)]}
+                  />
+                ))}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    );
+  }
 }
 
 CalendarYear.propTypes = propTypes;

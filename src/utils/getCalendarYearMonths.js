@@ -12,7 +12,7 @@ export default function getCalendarYearMonths(year) {
   while (currentMonth < lastMonth) {
     currentLine.push(currentMonth.clone());
     currentMonth.add(1, 'month');
-    offset++;
+    offset += 1;
 
     if (offset === 3) {
       monthsInYear.push(currentLine);

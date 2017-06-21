@@ -60,6 +60,7 @@ function loadStories() {
   require('../stories/SingleDatePicker_day');
   require('../stories/DayPickerRangeController');
   require('../stories/DayPicker');
+  require('../stories/MonthPicker');    
 }
 
 setAddon(infoAddon);

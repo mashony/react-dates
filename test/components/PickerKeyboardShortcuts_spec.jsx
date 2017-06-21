@@ -3,10 +3,10 @@ import { expect } from 'chai';
 import sinon from 'sinon-sandbox';
 import { shallow } from 'enzyme';
 
-import { DayPickerKeyboardShortcutsPhrases } from '../../src/defaultPhrases';
+import { PickerKeyboardShortcutsPhrases } from '../../src/defaultPhrases';
 import CloseButton from '../../src/svg/close.svg';
 
-import DayPickerKeyboardShortcuts, { KeyboardShortcutRow } from '../../src/components/DayPickerKeyboardShortcuts';
+import PickerKeyboardShortcuts, { KeyboardShortcutRow } from '../../src/components/PickerKeyboardShortcuts';
 
 describe('KeyboardShortcutRow', () => {
   it('is a .KeyboardShortcutRow', () => {
@@ -109,157 +109,157 @@ describe('KeyboardShortcutRow', () => {
   });
 });
 
-describe('DayPickerKeyboardShortcuts', () => {
+describe('PickerKeyboardShortcuts', () => {
   describe('#render', () => {
-    describe('.DayPickerKeyboardShortcuts__show', () => {
+    describe('.PickerKeyboardShortcuts__show', () => {
       it('is rendered', () => {
-        const wrapper = shallow(<DayPickerKeyboardShortcuts />);
-        expect(wrapper.find('.DayPickerKeyboardShortcuts__show')).to.have.lengthOf(1);
+        const wrapper = shallow(<PickerKeyboardShortcuts />);
+        expect(wrapper.find('.PickerKeyboardShortcuts__show')).to.have.lengthOf(1);
       });
 
       it('is a button', () => {
-        const wrapper = shallow(<DayPickerKeyboardShortcuts />);
-        expect(wrapper.find('.DayPickerKeyboardShortcuts__show').is('button')).to.equal(true);
+        const wrapper = shallow(<PickerKeyboardShortcuts />);
+        expect(wrapper.find('.PickerKeyboardShortcuts__show').is('button')).to.equal(true);
       });
 
-      it('contains .DayPickerKeyboardShortcuts__show_span', () => {
-        const wrapper = shallow(<DayPickerKeyboardShortcuts />);
-        const buttonWrapper = wrapper.find('.DayPickerKeyboardShortcuts__show');
-        expect(buttonWrapper.find('.DayPickerKeyboardShortcuts__show_span')).to.have.lengthOf(1);
+      it('contains .PickerKeyboardShortcuts__show_span', () => {
+        const wrapper = shallow(<PickerKeyboardShortcuts />);
+        const buttonWrapper = wrapper.find('.PickerKeyboardShortcuts__show');
+        expect(buttonWrapper.find('.PickerKeyboardShortcuts__show_span')).to.have.lengthOf(1);
       });
 
       it('click calls props.openKeyboardShortcutsPanel', () => {
         const openKeyboardShortcutsPanelStub = sinon.stub();
         const wrapper = shallow(
-          <DayPickerKeyboardShortcuts
+          <PickerKeyboardShortcuts
             openKeyboardShortcutsPanel={openKeyboardShortcutsPanelStub}
           />,
         );
-        const buttonWrapper = wrapper.find('.DayPickerKeyboardShortcuts__show');
+        const buttonWrapper = wrapper.find('.PickerKeyboardShortcuts__show');
         buttonWrapper.simulate('click');
         expect(openKeyboardShortcutsPanelStub.callCount).to.equal(1);
       });
     });
 
-    describe('.DayPickerKeyboardShortcuts__panel', () => {
+    describe('.PickerKeyboardShortcuts__panel', () => {
       it('is not rendered if props.showKeyboardShortcutsPanel is falsey', () => {
         const wrapper = shallow(
-          <DayPickerKeyboardShortcuts
+          <PickerKeyboardShortcuts
             showKeyboardShortcutsPanel={false}
           />,
         );
-        expect(wrapper.find('.DayPickerKeyboardShortcuts__panel')).to.have.lengthOf(0);
+        expect(wrapper.find('.PickerKeyboardShortcuts__panel')).to.have.lengthOf(0);
       });
 
       it('is rendered if props.showKeyboardShortcutsPanel is truthy', () => {
         const wrapper = shallow(
-          <DayPickerKeyboardShortcuts
+          <PickerKeyboardShortcuts
             showKeyboardShortcutsPanel
           />,
         );
-        expect(wrapper.find('.DayPickerKeyboardShortcuts__panel')).to.have.lengthOf(1);
+        expect(wrapper.find('.PickerKeyboardShortcuts__panel')).to.have.lengthOf(1);
       });
 
       it('has role of dialog', () => {
         const wrapper = shallow(
-          <DayPickerKeyboardShortcuts
+          <PickerKeyboardShortcuts
             showKeyboardShortcutsPanel
           />,
         );
-        expect(wrapper.find('.DayPickerKeyboardShortcuts__panel').props().role).to.equal('dialog');
+        expect(wrapper.find('.PickerKeyboardShortcuts__panel').props().role).to.equal('dialog');
       });
 
-      describe('.DayPickerKeyboardShortcuts__title', () => {
+      describe('.PickerKeyboardShortcuts__title', () => {
         it('is rendered', () => {
           const wrapper = shallow(
-            <DayPickerKeyboardShortcuts
+            <PickerKeyboardShortcuts
               showKeyboardShortcutsPanel
             />,
           );
-          expect(wrapper.find('.DayPickerKeyboardShortcuts__title')).to.have.lengthOf(1);
+          expect(wrapper.find('.PickerKeyboardShortcuts__title')).to.have.lengthOf(1);
         });
 
         it('has props.phrases.keyboardShortcuts as a child', () => {
           const keyboardShortcuts = 'FOOBARBAZ';
-          const phrases = { ...DayPickerKeyboardShortcutsPhrases, keyboardShortcuts };
+          const phrases = { ...PickerKeyboardShortcutsPhrases, keyboardShortcuts };
           const wrapper = shallow(
-            <DayPickerKeyboardShortcuts
+            <PickerKeyboardShortcuts
               showKeyboardShortcutsPanel
               phrases={phrases}
             />,
           );
-          expect(wrapper.find('.DayPickerKeyboardShortcuts__title').text()).to.equal(keyboardShortcuts);
+          expect(wrapper.find('.PickerKeyboardShortcuts__title').text()).to.equal(keyboardShortcuts);
         });
       });
 
-      describe('.DayPickerKeyboardShortcuts__close', () => {
+      describe('.PickerKeyboardShortcuts__close', () => {
         it('is rendered', () => {
           const wrapper = shallow(
-            <DayPickerKeyboardShortcuts
+            <PickerKeyboardShortcuts
               showKeyboardShortcutsPanel
             />,
           );
-          expect(wrapper.find('.DayPickerKeyboardShortcuts__close')).to.have.lengthOf(1);
+          expect(wrapper.find('.PickerKeyboardShortcuts__close')).to.have.lengthOf(1);
         });
 
         it('is a button', () => {
           const wrapper = shallow(
-            <DayPickerKeyboardShortcuts
+            <PickerKeyboardShortcuts
               showKeyboardShortcutsPanel
             />,
           );
-          expect(wrapper.find('.DayPickerKeyboardShortcuts__close').is('button')).to.equal(true);
+          expect(wrapper.find('.PickerKeyboardShortcuts__close').is('button')).to.equal(true);
         });
 
         it('renders a CloseButton', () => {
           const wrapper = shallow(
-            <DayPickerKeyboardShortcuts
+            <PickerKeyboardShortcuts
               showKeyboardShortcutsPanel
             />,
           );
-          expect(wrapper.find('.DayPickerKeyboardShortcuts__close').find(CloseButton)).to.have.lengthOf(1);
+          expect(wrapper.find('.PickerKeyboardShortcuts__close').find(CloseButton)).to.have.lengthOf(1);
         });
 
         it('calls props.closeKeyboardShortcutsPanel if clicked', () => {
           const closeKeyboardShortcutsPanelStub = sinon.stub();
           const wrapper = shallow(
-            <DayPickerKeyboardShortcuts
+            <PickerKeyboardShortcuts
               showKeyboardShortcutsPanel
               closeKeyboardShortcutsPanel={closeKeyboardShortcutsPanelStub}
             />,
           );
-          const closeButton = wrapper.find('.DayPickerKeyboardShortcuts__close');
+          const closeButton = wrapper.find('.PickerKeyboardShortcuts__close');
           closeButton.simulate('click');
           expect(closeKeyboardShortcutsPanelStub.callCount).to.equal(1);
         });
       });
 
-      describe('.DayPickerKeyboardShortcuts__list', () => {
+      describe('.PickerKeyboardShortcuts__list', () => {
         it('is rendered', () => {
           const wrapper = shallow(
-            <DayPickerKeyboardShortcuts
+            <PickerKeyboardShortcuts
               showKeyboardShortcutsPanel
             />,
           );
-          expect(wrapper.find('.DayPickerKeyboardShortcuts__list')).to.have.lengthOf(1);
+          expect(wrapper.find('.PickerKeyboardShortcuts__list')).to.have.lengthOf(1);
         });
 
         it('is a ul', () => {
           const wrapper = shallow(
-            <DayPickerKeyboardShortcuts
+            <PickerKeyboardShortcuts
               showKeyboardShortcutsPanel
             />,
           );
-          expect(wrapper.find('.DayPickerKeyboardShortcuts__list').is('ul')).to.equal(true);
+          expect(wrapper.find('.PickerKeyboardShortcuts__list').is('ul')).to.equal(true);
         });
 
         it('renders 7 KeyboardShortcutRow components', () => {
           const wrapper = shallow(
-            <DayPickerKeyboardShortcuts
+            <PickerKeyboardShortcuts
               showKeyboardShortcutsPanel
             />,
           );
-          expect(wrapper.find('.DayPickerKeyboardShortcuts__list').find(KeyboardShortcutRow)).to.have.lengthOf(7);
+          expect(wrapper.find('.PickerKeyboardShortcuts__list').find(KeyboardShortcutRow)).to.have.lengthOf(7);
         });
       });
     });

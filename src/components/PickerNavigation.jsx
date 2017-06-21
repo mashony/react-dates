@@ -1,6 +1,10 @@
-import React, { PropTypes } from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
 import { forbidExtraProps } from 'airbnb-prop-types';
 import cx from 'classnames';
+
+import { PickerNavigationPhrases } from '../defaultPhrases';
+import getPhrasePropTypes from '../utils/getPhrasePropTypes';
 
 import LeftArrow from '../svg/arrow-left.svg';
 import RightArrow from '../svg/arrow-right.svg';
@@ -20,6 +24,11 @@ const propTypes = forbidExtraProps({
 
   onPrevClick: PropTypes.func,
   onNextClick: PropTypes.func,
+
+  // internationalization
+  phrases: PropTypes.shape(getPhrasePropTypes(PickerNavigationPhrases)),
+
+  isRTL: PropTypes.bool,
 });
 
 const defaultProps = {
@@ -29,6 +38,10 @@ const defaultProps = {
 
   onPrevClick() {},
   onNextClick() {},
+
+  // internationalization
+  phrases: PickerNavigationPhrases,
+  isRTL: false,
 };
 
 export default function PickerNavigation(props) {
@@ -38,6 +51,8 @@ export default function PickerNavigation(props) {
     onPrevClick,
     onNextClick,
     orientation,
+    phrases,
+    isRTL,
   } = props;
 
   const isVertical = orientation !== HORIZONTAL_ORIENTATION;
@@ -50,10 +65,16 @@ export default function PickerNavigation(props) {
   if (!navPrevIcon) {
     isDefaultNavPrev = true;
     navPrevIcon = isVertical ? <ChevronUp /> : <LeftArrow />;
+    if (isRTL && !isVertical) {
+      navPrevIcon = <RightArrow />;
+    }
   }
   if (!navNextIcon) {
     isDefaultNavNext = true;
     navNextIcon = isVertical ? <ChevronDown /> : <RightArrow />;
+    if (isRTL && !isVertical) {
+      navNextIcon = <LeftArrow />;
+    }
   }
 
   const navClassNames = cx('PickerNavigation', {
@@ -63,28 +84,40 @@ export default function PickerNavigation(props) {
   });
   const prevClassNames = cx('PickerNavigation__prev', {
     'PickerNavigation__prev--default': isDefaultNavPrev,
+    'PickerNavigation__prev--rtl': isRTL,
   });
   const nextClassNames = cx('PickerNavigation__next', {
     'PickerNavigation__next--default': isDefaultNavNext,
+    'PickerNavigation__next--rtl': isRTL,
   });
 
   return (
     <div className={navClassNames}>
-      {!isVerticalScrollable &&
-        <span
+      {!isVerticalScrollable && (
+        <button
+          type="button"
+          aria-label={phrases.jumpToPrevMonth}
           className={prevClassNames}
           onClick={onPrevClick}
+          onMouseUp={(e) => {
+            e.currentTarget.blur();
+          }}
         >
           {navPrevIcon}
-        </span>
-      }
+        </button>
+      )}
 
-      <span
+      <button
+        type="button"
+        aria-label={phrases.jumpToNextMonth}
         className={nextClassNames}
         onClick={onNextClick}
+        onMouseUp={(e) => {
+          e.currentTarget.blur();
+        }}
       >
         {navNextIcon}
-      </span>
+      </button>
     </div>
   );
 }

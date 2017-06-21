@@ -33,6 +33,11 @@ describe('PickerNavigation', () => {
         expect(wrapper.find('.PickerNavigation__prev')).to.have.lengthOf(1);
       });
 
+      it('has .PickerNavigation__prev--rtl class', () => {
+        const wrapper = shallow(<PickerNavigation isRTL />);
+        expect(wrapper.find('.PickerNavigation__prev--rtl')).to.have.lengthOf(1);
+      });
+
       it('has .PickerNavigation__prev on custom icon', () => {
         const wrapper = shallow(<PickerNavigation navPrev={<span>Prev</span>} />);
         expect(wrapper.find('.PickerNavigation__prev')).to.have.lengthOf(1);
@@ -60,6 +65,11 @@ describe('PickerNavigation', () => {
         expect(wrapper.find('.PickerNavigation__next')).to.have.lengthOf(1);
       });
 
+      it('.PickerNavigation__next--rtl class exists', () => {
+        const wrapper = shallow(<PickerNavigation isRTL />);
+        expect(wrapper.find('.PickerNavigation__next--rtl')).to.have.lengthOf(1);
+      });
+
       it('has .PickerNavigation__next class on custom icon', () => {
         const wrapper = shallow(<PickerNavigation navNext={<span>Next</span>} />);
         expect(wrapper.find('.PickerNavigation__next')).to.have.lengthOf(1);
@@ -79,27 +89,27 @@ describe('PickerNavigation', () => {
 
   describe('interactions', () => {
     it('is triggered by prev month button click', () => {
-      const onPrevStub = sinon.stub();
+      const onPrevMonthStub = sinon.stub();
       const prevMonthButton = shallow(
         <PickerNavigation
-          onPrevClick={onPrevStub}
+          onPrevMonthClick={onPrevMonthStub}
         />,
       ).find('.PickerNavigation__prev');
       prevMonthButton.simulate('click');
-      expect(onPrevStub).to.have.property('callCount', 1);
+      expect(onPrevMonthStub).to.have.property('callCount', 1);
     });
   });
 
   describe('interactions', () => {
     it('is triggered by next month button click', () => {
-      const onNextStub = sinon.stub();
+      const onNextMonthStub = sinon.stub();
       const nextMonthButton = shallow(
         <PickerNavigation
-          onNextClick={onNextStub}
+          onNextMonthClick={onNextMonthStub}
         />,
       ).find('.PickerNavigation__next');
       nextMonthButton.simulate('click');
-      expect(onNextStub).to.have.property('callCount', 1);
+      expect(onNextMonthStub).to.have.property('callCount', 1);
     });
   });
 });

@@ -34,7 +34,7 @@
     border-radius: 3px;
     padding: 6px 9px;
     top: 18px;
-    z-index: 2;
+    z-index: $react-dates-z-index + 2;
     position: absolute;
   }
 
@@ -42,8 +42,18 @@
     left: 22px;
   }
 
+  .PickerNavigation__prev--rtl {  
+    left: auto;
+    right: 22px;
+  }
+
   .PickerNavigation__next {
     right: 22px;
+  }
+
+  .PickerNavigation__next--rtl {  
+    right: auto;
+    left: 22px;
   }
 
   .PickerNavigation__prev--default,
@@ -64,7 +74,7 @@
   left: 0;
   height: 52px;
   width: 100%;
-  z-index: 2;
+  z-index: $react-dates-z-index + 2;
 
   .PickerNavigation__prev,
   .PickerNavigation__next {
@@ -92,10 +102,10 @@
   }
 }
 
-.DayPickerNavigation--vertical-scrollable {
+.PickerNavigation--vertical-scrollable {
   position: relative;
 
-  .DayPickerNavigation__next {
+  .PickerNavigation__next {
     width: 100%;
   }
 }

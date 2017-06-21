@@ -10,8 +10,8 @@ import * as isDayVisible from '../../src/utils/isDayVisible';
 
 import DayPicker, { calculateDimension } from '../../src/components/DayPicker';
 import CalendarMonthGrid from '../../src/components/CalendarMonthGrid';
-import DayPickerNavigation from '../../src/components/DayPickerNavigation';
-import DayPickerKeyboardShortcuts from '../../src/components/DayPickerKeyboardShortcuts';
+import PickerNavigation from '../../src/components/PickerNavigation';
+import DayPickerKeyboardShortcuts from '../../src/components/PickerKeyboardShortcuts';
 import {
   HORIZONTAL_ORIENTATION,
   VERTICAL_ORIENTATION,
@@ -115,7 +115,7 @@ describe('DayPicker', () => {
       });
     });
 
-    describe('DayPickerKeyboardShortcuts', () => {
+    describe('PickerKeyboardShortcuts', () => {
       it('component exists if state.isTouchDevice is false and hideKeyboardShortcutsPanel is false', () => {
         const wrapper = shallow(<DayPicker hideKeyboardShortcutsPanel={false} />);
         wrapper.setState({ isTouchDevice: false });
@@ -171,7 +171,7 @@ describe('DayPicker', () => {
         <DayPicker orientation={VERTICAL_SCROLLABLE} />,
         { lifecycleExperimental: true },
       );
-      const nav = wrapper.find(DayPickerNavigation);
+      const nav = wrapper.find(PickerNavigation);
       expect(nav.prop('onNextMonthClick')).to.equal(wrapper.instance().multiplyScrollableMonths);
     });
   });
