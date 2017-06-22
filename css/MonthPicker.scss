@@ -3,6 +3,7 @@
 .MonthPicker {
   background: $react-dates-color-white;
   position: relative;
+  text-align: left;
 }
 
 .MonthPicker--horizontal {
@@ -20,4 +21,24 @@
 
 .MonthPicker--vertical.MonthPicker--portal {
   position: initial;
+}
+
+// we can revisit this styling during the a11y picker
+.MonthPicker__focus-region {
+  outline: none;
+}
+
+.MonthPicker--vertical-scrollable {
+  height: 100%;
+
+  .transition-container--vertical {
+    padding-top: 20px;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    left: 0;
+    overflow-y: scroll;
+  }
 }

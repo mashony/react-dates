@@ -28,7 +28,7 @@ import {
 
 const propTypes = forbidExtraProps({
   firstVisibleYearIndex: PropTypes.number,
-  initialYear: PropTypes.func,
+  initialYear: momentPropTypes.momentObj,
   isAnimating: PropTypes.bool,
   numberOfYears: PropTypes.number,
   modifiers: PropTypes.object,
@@ -73,7 +73,7 @@ const defaultProps = {
 };
 
 function getYears(initialYear, numberOfYears, withoutTransitionYears) {
-  let year = initialYear().clone();
+  let year = initialYear.clone();
   if (!withoutTransitionYears) year = year.subtract(1, 'year');
 
   const years = [];
@@ -206,6 +206,7 @@ export default class CalendarYearGrid extends React.Component {
         style={style}
         onTransitionEnd={onYearTransitionEnd}
       >
+        <div>hola2</div>
         {years.map((year, i) => {
           const isVisible =
             (i >= firstVisibleYearIndex) && (i < firstVisibleYearIndex + numberOfYears);

@@ -184,7 +184,7 @@ export const MonthPickerPhrases = {
   dateIsUnavailable,
 };
 
-export const PickerKeyboardShortcutsPhrases = {
+export const DayPickerKeyboardShortcutsPhrases = {
   keyboardShortcuts,
   showKeyboardShortcutsPanel,
   hideKeyboardShortcutsPanel,
@@ -204,7 +204,7 @@ export const PickerKeyboardShortcutsPhrases = {
   returnFocusToInput,
 };
 
-export const PickerNavigationPhrases = {
+export const DayPickerNavigationPhrases = {
   jumpToPrevMonth,
   jumpToNextMonth,
 };

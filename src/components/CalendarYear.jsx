@@ -108,7 +108,7 @@ export default class CalendarYear extends React.Component {
     const { months } = this.state;
     const yearTitle = renderYear ? renderYear(year) : year.format(yearFormat);
 
-    const calendarMonthClasses = cx('CalendarMonth', {
+    const calendarMonthClasses = cx('CalendarYear', {
       'CalendarYear--horizontal': orientation === HORIZONTAL_ORIENTATION,
       'CalendarYear--vertical': orientation === VERTICAL_ORIENTATION,
       'CalendarYear--vertical-scrollable': orientation === VERTICAL_SCROLLABLE,
@@ -117,26 +117,26 @@ export default class CalendarYear extends React.Component {
     return (
       <div className={calendarMonthClasses} data-visible={isVisible}>
         <table>
-          <caption className="CalendarMonth__caption js-CalendarMonth__caption">
+          <caption className="CalendarYear__caption js-CalendarYear__caption">
             <strong>{yearTitle}</strong>
           </caption>
 
-          <tbody className="js-CalendarMonth__grid">
-            {months.map((month, i) => (
+          <tbody className="js-CalendarYear__grid">
+            {months.map((monthBlock, i) => (
               <tr key={i}>
-                {month.map((day, dayOfWeek) => (
+                {monthBlock.map((month, index) => (
                   <CalendarYearMonth
                     month={month}
                     monthSize={monthSize}
                     tabIndex={isVisible && isSameMonth(month, focusedDate) ? 0 : -1}
                     isFocused={isFocused}
-                    key={dayOfWeek}
+                    key={index}
                     onMonthMouseEnter={onMonthMouseEnter}
                     onMonthMouseLeave={onMonthMouseLeave}
                     onMonthClick={onMonthClick}
                     renderMonth={renderMonth}
                     phrases={phrases}
-                    modifiers={modifiers[toISODateString(day)]}
+                    modifiers={modifiers[toISODateString(month)]}
                   />
                 ))}
               </tr>

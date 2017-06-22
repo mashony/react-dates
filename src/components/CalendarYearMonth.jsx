@@ -1,113 +1,124 @@
-import React, { PropTypes } from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
 import shallowCompare from 'react-addons-shallow-compare';
+import momentPropTypes from 'react-moment-proptypes';
+import { forbidExtraProps, nonNegativeInteger } from 'airbnb-prop-types';
 import moment from 'moment';
+import cx from 'classnames';
 
-export const TOUCHSTART_TIMEOUT = 200;
+import { CalendarMonthPhrases } from '../defaultPhrases';
+import getPhrasePropTypes from '../utils/getPhrasePropTypes';
+import getPhrase from '../utils/getPhrase';
 
-const propTypes = {
-  month: PropTypes.func,
-  modifiers: PropTypes.arrayOf(PropTypes.string),
+import { BLOCKED_MODIFIER, MONTH_SIZE } from '../../constants';
+
+const propTypes = forbidExtraProps({
+  month: momentPropTypes.momentObj,
+  monthSize: nonNegativeInteger,
+  modifiers: PropTypes.instanceOf(Set),
+  isFocused: PropTypes.bool,
+  tabIndex: PropTypes.oneOf([0, -1]),
   onMonthClick: PropTypes.func,
-  onMonthMouseDown: PropTypes.func,
-  onMonthMouseUp: PropTypes.func,
   onMonthMouseEnter: PropTypes.func,
   onMonthMouseLeave: PropTypes.func,
-  onMonthTouchStart: PropTypes.func,
-  onMonthTouchEnd: PropTypes.func,
-  onMonthTouchTap: PropTypes.func,
-};
+  renderMonth: PropTypes.func,
+
+  // internationalization
+  phrases: PropTypes.shape(getPhrasePropTypes(CalendarMonthPhrases)),
+});
 
 const defaultProps = {
-  month: () => moment(),
-  modifiers: [],
+  month: moment(),
+  monthSize: MONTH_SIZE,
+  modifiers: new Set(),
+  isFocused: false,
+  tabIndex: -1,
   onMonthClick() {},
-  onMonthMouseDown() {},
-  onMonthMouseUp() {},
   onMonthMouseEnter() {},
   onMonthMouseLeave() {},
-  onMonthTouchStart() {},
-  onMonthTouchEnd() {},
-  onMonthTouchTap() {},
+  renderMonth: null,
+
+  // internationalization
+  phrases: CalendarMonthPhrases,
 };
 
 export default class CalendarYearMonth extends React.Component {
-  constructor(props) {
-    super(props);
-    this.hasActiveTouchStart = false;
-    this.timeout = undefined;
-  }
-
   shouldComponentUpdate(nextProps, nextState) {
     return shallowCompare(this, nextProps, nextState);
   }
 
-  componentWillUnmount() {
-    if (this.timeout) {
-      clearTimeout(this.timeout);
+  componentDidUpdate(prevProps) {
+    const { isFocused, tabIndex } = this.props;
+    if (tabIndex === 0) {
+      if (isFocused || tabIndex !== prevProps.tabIndex) {
+        this.buttonRef.focus();
+      }
     }
   }
 
-  handleMonthClick(month, modifiers, e) {
-    this.props.onMonthClick(month, modifiers, e);
+  onMonthClick(day, e) {
+    const { onMonthClick } = this.props;
+    onMonthClick(day, e);
   }
 
-  handleMonthMouseDown(month, modifiers, e) {
-    this.props.onMonthMouseDown(month, modifiers, e);
+  onMonthMouseEnter(day, e) {
+    const { onMonthMouseEnter } = this.props;
+    onMonthMouseEnter(day, e);
   }
 
-  handleMonthMouseUp(month, modifiers, e) {
-    this.props.onMonthMouseUp(month, modifiers, e);
-  }
-
-  handleMonthMouseEnter(month, modifiers, e) {
-    this.props.onMonthMouseEnter(month, modifiers, e);
-  }
-
-  handleMonthMouseLeave(month, modifiers, e) {
-    this.props.onMonthMouseLeave(month, modifiers, e);
-  }
-
-  handleMonthTouchStart(month, modifiers, e) {
-    this.hasActiveTouchStart = true;
-    this.timeout = setTimeout(() => {
-      this.hasActiveTouchStart = false;
-    }, TOUCHSTART_TIMEOUT);
-
-    this.props.onMonthTouchStart(month, modifiers, e);
-  }
-
-  handleMonthTouchEnd(month, modifiers, e) {
-    if (this.hasActiveTouchStart) {
-      this.hasActiveTouchStart = false;
-      this.handleMonthTouchTap(month, modifiers, e);
-    }
-
-    this.props.onMonthTouchEnd(month, modifiers, e);
-  }
-
-  handleMonthTouchTap(month, modifiers, e) {
-    this.props.onMonthTouchTap(month, modifiers, e);
+  onMonthMouseLeave(day, e) {
+    const { onMonthMouseLeave } = this.props;
+    onMonthMouseLeave(day, e);
   }
 
   render() {
     const {
       month,
+      monthSize,
       modifiers,
+      renderMonth,
+      tabIndex,
+      phrases: {
+        chooseAvailableDate,
+        dateIsUnavailable,
+      },
     } = this.props;
 
+    if (!month) return <td />;
+
+    const className = cx('CalendarYearMonth', Array.from(modifiers, mod => `CalendarYearMonth--${mod}`));
+
+    const formattedDate = month.format('MMMM');
+
+    let ariaLabel = getPhrase(chooseAvailableDate, {
+      date: formattedDate,
+    });
+
+    if (BLOCKED_MODIFIER in modifiers && modifiers[BLOCKED_MODIFIER](month)) {
+      ariaLabel = getPhrase(dateIsUnavailable, { date: formattedDate });
+    }
+
+    const monthSizeStyles = {
+      width: monthSize,
+      height: monthSize - 1,
+    };
+
     return (
-      <div
-        className="CalendarYearMonth"
-        onMouseEnter={e => this.handleMonthMouseEnter(month(), modifiers, e)}
-        onMouseLeave={e => this.handleMonthMouseLeave(month(), modifiers, e)}
-        onMouseDown={e => this.handleMonthMouseDown(month(), modifiers, e)}
-        onMouseUp={e => this.handleMonthMouseUp(month(), modifiers, e)}
-        onClick={e => this.handleMonthClick(month(), modifiers, e)}
-        onTouchStart={e => this.handleMonthTouchStart(month(), modifiers, e)}
-        onTouchEnd={e => this.handleMonthTouchEnd(month(), modifiers, e)}
-      >
-        <span className="CalendarYearMonth__month">{month().format('MMMM')}</span>
-      </div>
+      <td className={className} style={monthSizeStyles}>
+        <button
+          type="button"
+          ref={(ref) => { this.buttonRef = ref; }}
+          className="CalendarYearMonth__button"
+          aria-label={ariaLabel}
+          onMouseEnter={(e) => { this.onMonthMouseEnter(month, e); }}
+          onMouseLeave={(e) => { this.onMonthMouseLeave(month, e); }}
+          onMouseUp={(e) => { e.currentTarget.blur(); }}
+          onClick={(e) => { this.onMonthClick(month, e); }}
+          tabIndex={tabIndex}
+        >
+          {renderMonth ? renderMonth(month) : month.format('D')}
+        </button>
+      </td>
     );
   }
 }

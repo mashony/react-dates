@@ -33,8 +33,8 @@ import {
   MONTH_SIZE,
 } from '../../constants';
 
-const MONTH_PADDING = 23;
-const DAY_PICKER_PADDING = 9;
+const YEAR_PADDING = 23;
+const MONTH_PICKER_PADDING = 9;
 const PREV_TRANSITION = 'prev';
 const NEXT_TRANSITION = 'next';
 
@@ -58,12 +58,12 @@ const propTypes = forbidExtraProps({
   onNextClick: PropTypes.func,
   onMultiplyScrollableYears: PropTypes.func, // VERTICAL_SCROLLABLE MonthPickers only
 
-  // month props
+  // year props
   renderYear: PropTypes.func,
 
-  // day props
+  // month props
   modifiers: PropTypes.object,
-  renderYear: PropTypes.func,
+  renderMonth: PropTypes.func,
   onMonthClick: PropTypes.func,
   onMonthMouseEnter: PropTypes.func,
   onMonthMouseLeave: PropTypes.func,
@@ -100,11 +100,11 @@ export const defaultProps = {
   onMultiplyScrollableYears() {},
 
   // year props
-  renderYear: null,
+  renderYear: () => null,
 
   // month props
   modifiers: {},
-  renderYear: null,
+  renderMonth: () => null,
   onMonthClick() {},
   onMonthMouseEnter() {},
   onMonthMouseLeave() {},
@@ -194,7 +194,7 @@ export default class MonthPicker extends React.Component {
       yearTransition: null,
       translationValue,
       scrollableYearMultiple: 1,
-      calendarYearhWidth: getCalendarYearWidth(props.monthSize),
+      calendarYearWidth: getCalendarYearWidth(props.monthSize),
       focusedDate: (!props.hidden || props.isFocused) ? focusedDate : null,
       nextFocusedDate: null,
       showKeyboardShortcuts: props.showKeyboardShortcuts,
@@ -482,7 +482,7 @@ export default class MonthPicker extends React.Component {
     if (onMultiplyScrollableYears) onMultiplyScrollableYears(e);
 
     this.setState({
-      scrollableMonthMultiple: this.state.scrollableMonthMultiple + 1,
+      scrollableYearMultiple: this.state.scrollableYearMultiple + 1,
     });
   }
 
@@ -582,7 +582,7 @@ export default class MonthPicker extends React.Component {
       },
     );
 
-    const newYearHeight = Math.max(...heights) + MONTH_PADDING;
+    const newYearHeight = Math.max(...heights) + YEAR_PADDING;
 
     if (newYearHeight !== calculateDimension(this.transitionContainer, 'height')) {
       this.monthHeight = newYearHeight;
@@ -657,53 +657,13 @@ export default class MonthPicker extends React.Component {
     );
   }
 
-  renderWeekHeader(index) {
-    const { monthSize, orientation } = this.props;
-    const { calendarYearWidth } = this.state;
-    const verticalScrollable = orientation === VERTICAL_SCROLLABLE;
-    const horizontalStyle = {
-      left: index * calendarYearWidth,
-    };
-    const verticalStyle = {
-      marginLeft: -calendarYearWidth / 2,
-    };
-
-    let style = {}; // no styles applied to the vertical-scrollable orientation
-    if (this.isHorizontal()) {
-      style = horizontalStyle;
-    } else if (this.isVertical() && !verticalScrollable) {
-      style = verticalStyle;
-    }
-
-    const header = [];
-    for (let i = 0; i < 7; i += 1) {
-      header.push(
-        <li key={i} style={{ width: monthSize }}>
-          <small>{moment().weekday(i).format('dd')}</small>
-        </li>,
-      );
-    }
-
-    return (
-      <div
-        className="MonthPicker__week-header"
-        key={`week-${index}`}
-        style={style}
-      >
-        <ul>
-          {header}
-        </ul>
-      </div>
-    );
-  }
-
   render() {
     const {
       calendarYearWidth,
       currentYear,
       yearTransition,
       translationValue,
-      scrollableMonthMultiple,
+      scrollableYearMultiple,
       focusedDate,
       showKeyboardShortcuts,
       isTouchDevice: isTouch,
@@ -728,12 +688,6 @@ export default class MonthPicker extends React.Component {
       phrases,
     } = this.props;
 
-    const numOfWeekHeaders = this.isVertical() ? 1 : numberOfYears;
-    const weekHeaders = [];
-    for (let i = 0; i < numOfWeekHeaders; i += 1) {
-      weekHeaders.push(this.renderWeekHeader(i));
-    }
-
     let firstVisibleYearIndex = 1;
     if (yearTransition === PREV_TRANSITION) {
       firstVisibleYearIndex -= 1;
@@ -756,7 +710,7 @@ export default class MonthPicker extends React.Component {
       'transition-container--vertical': this.isVertical(),
     });
 
-    const horizontalWidth = (calendarYearWidth * numberOfYears) + (2 * DAY_PICKER_PADDING);
+    const horizontalWidth = (calendarYearWidth * numberOfYears) + (2 * MONTH_PICKER_PADDING);
 
     // this is a kind of made-up value that generally looks good. we'll
     // probably want to let the user set this explicitly.
@@ -792,14 +746,6 @@ export default class MonthPicker extends React.Component {
         style={MonthPickerStyle}
       >
         <OutsideClickHandler onOutsideClick={onOutsideClick}>
-          <div
-            className="MonthPicker__week-headers"
-            aria-hidden="true"
-            role="presentation"
-          >
-            {weekHeaders}
-          </div>
-
           <div // eslint-disable-line jsx-a11y/no-noninteractive-element-interactions
             className="MonthPicker__focus-region"
             ref={(ref) => { this.container = ref; }}
@@ -820,11 +766,11 @@ export default class MonthPicker extends React.Component {
                 ref={this.setCalendarYearGridRef}
                 transformValue={transformValue}
                 firstVisibleYearIndex={firstVisibleYearIndex}
-                initialYear={() => currentYear}
+                initialYear={currentYear}
                 isAnimating={isCalendarYearGridAnimating}
                 modifiers={modifiers}
                 orientation={orientation}
-                numberOfYears={numberOfYears * scrollableMonthMultiple}
+                numberOfYears={numberOfYears * scrollableYearMultiple}
                 onMonthClick={onMonthClick}
                 onMonthMouseEnter={onMonthMouseEnter}
                 onMonthMouseLeave={onMonthMouseLeave}

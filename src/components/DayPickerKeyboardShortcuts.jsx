@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import { forbidExtraProps } from 'airbnb-prop-types';
 import cx from 'classnames';
 
-import { PickerKeyboardShortcutsPhrases } from '../defaultPhrases';
+import { DayPickerKeyboardShortcutsPhrases } from '../defaultPhrases';
 import getPhrasePropTypes from '../utils/getPhrasePropTypes';
 
 import CloseButton from '../svg/close.svg';
@@ -19,7 +19,7 @@ const propTypes = forbidExtraProps({
   showKeyboardShortcutsPanel: PropTypes.bool,
   openKeyboardShortcutsPanel: PropTypes.func,
   closeKeyboardShortcutsPanel: PropTypes.func,
-  phrases: PropTypes.shape(getPhrasePropTypes(PickerKeyboardShortcutsPhrases)),
+  phrases: PropTypes.shape(getPhrasePropTypes(DayPickerKeyboardShortcutsPhrases)),
 });
 
 const defaultProps = {
@@ -28,7 +28,7 @@ const defaultProps = {
   showKeyboardShortcutsPanel: false,
   openKeyboardShortcutsPanel() {},
   closeKeyboardShortcutsPanel() {},
-  phrases: PickerKeyboardShortcutsPhrases,
+  phrases: DayPickerKeyboardShortcutsPhrases,
 };
 
 export function KeyboardShortcutRow({ unicode, label, action }) {
@@ -75,22 +75,22 @@ export default function PickerKeyboardShortcuts({
   {
     unicode: '←/→',
     label: phrases.leftArrowRightArrow,
-    action: phrases.moveFocusByOneDay,
+    action: phrases.moveFocusByOneMonth,
   },
   {
     unicode: '↑/↓',
     label: phrases.upArrowDownArrow,
-    action: phrases.moveFocusByOneWeek,
+    action: phrases.moveFocusByThreeMonths,
   },
   {
     unicode: 'PgUp/PgDn',
     label: phrases.pageUpPageDown,
-    action: phrases.moveFocusByOneMonth,
+    action: phrases.moveFocusByOneYear,
   },
   {
     unicode: 'Home/End',
     label: phrases.homeEnd,
-    action: phrases.moveFocustoStartAndEndOfWeek,
+    action: phrases.moveFocustoStartOfMonthsRow,
   },
   {
     unicode: 'Esc',
@@ -108,6 +108,7 @@ export default function PickerKeyboardShortcuts({
     showKeyboardShortcutsPanel
     ? phrases.hideKeyboardShortcutsPanel
     : phrases.showKeyboardShortcutsPanel;
+
 
   return (
     <div>
