@@ -30,7 +30,7 @@ const defaultProps = {
   onMonthTouchTap() {},
 };
 
-export default class CalendarMonthOption extends React.Component {
+export default class CalendarYearMonth extends React.Component {
   constructor(props) {
     super(props);
     this.hasActiveTouchStart = false;
@@ -97,7 +97,7 @@ export default class CalendarMonthOption extends React.Component {
 
     return (
       <div
-        className="CalendarMonthOption"
+        className="CalendarYearMonth"
         onMouseEnter={e => this.handleMonthMouseEnter(month(), modifiers, e)}
         onMouseLeave={e => this.handleMonthMouseLeave(month(), modifiers, e)}
         onMouseDown={e => this.handleMonthMouseDown(month(), modifiers, e)}
@@ -106,11 +106,11 @@ export default class CalendarMonthOption extends React.Component {
         onTouchStart={e => this.handleMonthTouchStart(month(), modifiers, e)}
         onTouchEnd={e => this.handleMonthTouchEnd(month(), modifiers, e)}
       >
-        <span className="CalendarMonthOption__month">{month().format('MMMM')}</span>
+        <span className="CalendarYearMonth__month">{month().format('MMMM')}</span>
       </div>
     );
   }
 }
 
-CalendarMonthOption.propTypes = propTypes;
-CalendarMonthOption.defaultProps = defaultProps;
+CalendarYearMonth.propTypes = propTypes;
+CalendarYearMonth.defaultProps = defaultProps;

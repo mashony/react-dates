@@ -28,7 +28,7 @@ import {
 
 const propTypes = forbidExtraProps({
   firstVisibleYearIndex: PropTypes.number,
-  initialYear: momentPropTypes.momentObj,
+  initialYear: PropTypes.func,
   isAnimating: PropTypes.bool,
   numberOfYears: PropTypes.number,
   modifiers: PropTypes.object,
@@ -68,13 +68,13 @@ const defaultProps = {
   isFocused: false,
 
   // i18n
-  monthFormat: 'MMMM YYYY', // english locale
+  yearFormat: 'YYYY', // english locale
   phrases: CalendarMonthPhrases,
 };
 
 function getYears(initialYear, numberOfYears, withoutTransitionYears) {
-  let year = initialYear.clone();
-  if (!withoutTransitionYears) year = year.subtract(1, 'month');
+  let year = initialYear().clone();
+  if (!withoutTransitionYears) year = year.subtract(1, 'year');
 
   const years = [];
   for (let i = 0; i < (withoutTransitionYears ? numberOfYears : numberOfYears + 2); i += 1) {
@@ -119,7 +119,7 @@ export default class CalendarYearGrid extends React.Component {
         newYears.push(years[years.length - 1].clone().add(1, 'year'));
       } else {
         newYears = years.slice(0, years.length - 1);
-        newYears.unshift(years[0].clone().subtract(1, 'month'));
+        newYears.unshift(years[0].clone().subtract(1, 'year'));
       }
     }
 

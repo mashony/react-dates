@@ -213,3 +213,8 @@ export const CalendarDayPhrases = {
   chooseAvailableDate,
   dateIsUnavailable,
 };
+
+export const CalendarMonthPhrases = {
+  chooseAvailableDate,
+  dateIsUnavailable,
+};

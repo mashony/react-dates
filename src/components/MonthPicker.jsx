@@ -63,7 +63,7 @@ const propTypes = forbidExtraProps({
 
   // day props
   modifiers: PropTypes.object,
-  renderMonth: PropTypes.func,
+  renderYear: PropTypes.func,
   onMonthClick: PropTypes.func,
   onMonthMouseEnter: PropTypes.func,
   onMonthMouseLeave: PropTypes.func,
@@ -104,7 +104,7 @@ export const defaultProps = {
 
   // month props
   modifiers: {},
-  renderMonth: null,
+  renderYear: null,
   onMonthClick() {},
   onMonthMouseEnter() {},
   onMonthMouseLeave() {},
@@ -710,15 +710,15 @@ export default class MonthPicker extends React.Component {
     } = this.state;
 
     const {
-      numberOfMonths,
+      numberOfYears,
       orientation,
       modifiers,
       withPortal,
-      onDayClick,
-      onDayMouseEnter,
-      onDayMouseLeave,
+      onMonthClick,
+      onMonthMouseEnter,
+      onMonthMouseLeave,
+      renderYear,
       renderMonth,
-      renderDay,
       renderCalendarInfo,
       hideKeyboardShortcutsPanel,
       onOutsideClick,
@@ -728,21 +728,21 @@ export default class MonthPicker extends React.Component {
       phrases,
     } = this.props;
 
-    const numOfWeekHeaders = this.isVertical() ? 1 : numberOfMonths;
+    const numOfWeekHeaders = this.isVertical() ? 1 : numberOfYears;
     const weekHeaders = [];
     for (let i = 0; i < numOfWeekHeaders; i += 1) {
       weekHeaders.push(this.renderWeekHeader(i));
     }
 
-    let firstVisibleMonthIndex = 1;
+    let firstVisibleYearIndex = 1;
     if (yearTransition === PREV_TRANSITION) {
-      firstVisibleMonthIndex -= 1;
+      firstVisibleYearIndex -= 1;
     } else if (yearTransition === NEXT_TRANSITION) {
-      firstVisibleMonthIndex += 1;
+      firstVisibleYearIndex += 1;
     }
 
     const verticalScrollable = this.props.orientation === VERTICAL_SCROLLABLE;
-    if (verticalScrollable) firstVisibleMonthIndex = 0;
+    if (verticalScrollable) firstVisibleYearIndex = 0;
 
     const MonthPickerClassNames = cx('MonthPicker', {
       'MonthPicker--horizontal': this.isHorizontal(),
@@ -756,7 +756,7 @@ export default class MonthPicker extends React.Component {
       'transition-container--vertical': this.isVertical(),
     });
 
-    const horizontalWidth = (calendarYearWidth * numberOfMonths) + (2 * DAY_PICKER_PADDING);
+    const horizontalWidth = (calendarYearWidth * numberOfYears) + (2 * DAY_PICKER_PADDING);
 
     // this is a kind of made-up value that generally looks good. we'll
     // probably want to let the user set this explicitly.
@@ -819,18 +819,18 @@ export default class MonthPicker extends React.Component {
               <CalendarYearGrid
                 ref={this.setCalendarYearGridRef}
                 transformValue={transformValue}
-                firstVisibleMonthIndex={firstVisibleMonthIndex}
+                firstVisibleYearIndex={firstVisibleYearIndex}
                 initialYear={() => currentYear}
                 isAnimating={isCalendarYearGridAnimating}
                 modifiers={modifiers}
                 orientation={orientation}
-                numberOfMonths={numberOfMonths * scrollableMonthMultiple}
-                onDayClick={onDayClick}
-                onDayMouseEnter={onDayMouseEnter}
-                onDayMouseLeave={onDayMouseLeave}
+                numberOfYears={numberOfYears * scrollableMonthMultiple}
+                onMonthClick={onMonthClick}
+                onMonthMouseEnter={onMonthMouseEnter}
+                onMonthMouseLeave={onMonthMouseLeave}
+                renderYear={renderYear}
                 renderMonth={renderMonth}
-                renderDay={renderDay}
-                onMonthTransitionEnd={this.updateStateAfterYearTransition}
+                onYearTransitionEnd={this.updateStateAfterYearTransition}
                 yearFormat={yearFormat}
                 monthSize={monthSize}
                 isFocused={shouldFocusDate}
