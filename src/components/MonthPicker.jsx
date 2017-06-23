@@ -13,12 +13,12 @@ import getPhrasePropTypes from '../utils/getPhrasePropTypes';
 
 import OutsideClickHandler from './OutsideClickHandler';
 import CalendarYearGrid from './CalendarYearGrid';
-import PickerNavigation from './PickerNavigation';
-import PickerKeyboardShortcuts, {
+import MonthPickerNavigation from './MonthPickerNavigation';
+import MonthPickerKeyboardShortcuts, {
   TOP_LEFT,
   TOP_RIGHT,
   BOTTOM_RIGHT,
-} from './PickerKeyboardShortcuts';
+} from './MonthPickerKeyboardShortcuts';
 
 import getTransformStyles from '../utils/getTransformStyles';
 import getCalendarYearWidth from '../utils/getCalendarYearWidth';
@@ -645,7 +645,7 @@ export default class MonthPicker extends React.Component {
     }
 
     return (
-      <PickerNavigation
+      <MonthPickerNavigation
         onPrevClick={(e) => { this.onPrevClick(null, e); }}
         onNextClick={onNextClick}
         navPrev={navPrev}
@@ -787,7 +787,7 @@ export default class MonthPicker extends React.Component {
             </div>
 
             {!isTouch && !hideKeyboardShortcutsPanel &&
-              <PickerKeyboardShortcuts
+              <MonthPickerKeyboardShortcuts
                 block={this.isVertical() && !withPortal}
                 buttonLocation={keyboardShortcutButtonLocation}
                 showKeyboardShortcutsPanel={showKeyboardShortcuts}

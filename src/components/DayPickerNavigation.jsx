@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { forbidExtraProps } from 'airbnb-prop-types';
 import cx from 'classnames';
 
-import { PickerNavigationPhrases } from '../defaultPhrases';
+import { DayPickerNavigationPhrases } from '../defaultPhrases';
 import getPhrasePropTypes from '../utils/getPhrasePropTypes';
 
 import LeftArrow from '../svg/arrow-left.svg';
@@ -26,7 +26,7 @@ const propTypes = forbidExtraProps({
   onNextClick: PropTypes.func,
 
   // internationalization
-  phrases: PropTypes.shape(getPhrasePropTypes(PickerNavigationPhrases)),
+  phrases: PropTypes.shape(getPhrasePropTypes(DayPickerNavigationPhrases)),
 
   isRTL: PropTypes.bool,
 });
@@ -40,7 +40,7 @@ const defaultProps = {
   onNextClick() {},
 
   // internationalization
-  phrases: PickerNavigationPhrases,
+  phrases: DayPickerNavigationPhrases,
   isRTL: false,
 };
 

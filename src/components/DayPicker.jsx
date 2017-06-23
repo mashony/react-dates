@@ -13,12 +13,12 @@ import getPhrasePropTypes from '../utils/getPhrasePropTypes';
 
 import OutsideClickHandler from './OutsideClickHandler';
 import CalendarMonthGrid from './CalendarMonthGrid';
-import PickerNavigation from './PickerNavigation';
-import PickerKeyboardShortcuts, {
+import DayPickerNavigation from './DayPickerNavigation';
+import DayPickerKeyboardShortcuts, {
   TOP_LEFT,
   TOP_RIGHT,
   BOTTOM_RIGHT,
-} from './PickerKeyboardShortcuts';
+} from './DayPickerKeyboardShortcuts';
 
 import getTransformStyles from '../utils/getTransformStyles';
 import getCalendarMonthWidth from '../utils/getCalendarMonthWidth';
@@ -652,7 +652,7 @@ export default class DayPicker extends React.Component {
     }
 
     return (
-      <PickerNavigation
+      <DayPickerNavigation
         onPrevClick={(e) => { this.onPrevClick(null, e); }}
         onNextClick={onNextClick}
         navPrev={navPrev}
@@ -850,7 +850,7 @@ export default class DayPicker extends React.Component {
             </div>
 
             {!isTouch && !hideKeyboardShortcutsPanel &&
-              <PickerKeyboardShortcuts
+              <DayPickerKeyboardShortcuts
                 block={this.isVertical() && !withPortal}
                 buttonLocation={keyboardShortcutButtonLocation}
                 showKeyboardShortcutsPanel={showKeyboardShortcuts}

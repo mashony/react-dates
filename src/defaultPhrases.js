@@ -204,7 +204,32 @@ export const DayPickerKeyboardShortcutsPhrases = {
   returnFocusToInput,
 };
 
+export const MonthPickerKeyboardShortcutsPhrases = {
+  keyboardShortcuts,
+  showKeyboardShortcutsPanel,
+  hideKeyboardShortcutsPanel,
+  openThisPanel,
+  enterKey,
+  leftArrowRightArrow,
+  upArrowDownArrow,
+  pageUpPageDown,
+  homeEnd,
+  escape,
+  questionMark,
+  selectFocusedDate,
+  moveFocusByOneDay,
+  moveFocusByOneWeek,
+  moveFocusByOneMonth,
+  moveFocustoStartAndEndOfWeek,
+  returnFocusToInput,
+};
+
 export const DayPickerNavigationPhrases = {
+  jumpToPrevMonth,
+  jumpToNextMonth,
+};
+
+export const MonthPickerNavigationPhrases = {
   jumpToPrevMonth,
   jumpToNextMonth,
 };

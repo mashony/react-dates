@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import { forbidExtraProps } from 'airbnb-prop-types';
 import cx from 'classnames';
 
-import { DayPickerKeyboardShortcutsPhrases } from '../defaultPhrases';
+import { MonthPickerKeyboardShortcutsPhrases } from '../defaultPhrases';
 import getPhrasePropTypes from '../utils/getPhrasePropTypes';
 
 import CloseButton from '../svg/close.svg';
@@ -19,7 +19,7 @@ const propTypes = forbidExtraProps({
   showKeyboardShortcutsPanel: PropTypes.bool,
   openKeyboardShortcutsPanel: PropTypes.func,
   closeKeyboardShortcutsPanel: PropTypes.func,
-  phrases: PropTypes.shape(getPhrasePropTypes(DayPickerKeyboardShortcutsPhrases)),
+  phrases: PropTypes.shape(getPhrasePropTypes(MonthPickerKeyboardShortcutsPhrases)),
 });
 
 const defaultProps = {
@@ -28,7 +28,7 @@ const defaultProps = {
   showKeyboardShortcutsPanel: false,
   openKeyboardShortcutsPanel() {},
   closeKeyboardShortcutsPanel() {},
-  phrases: DayPickerKeyboardShortcutsPhrases,
+  phrases: MonthPickerKeyboardShortcutsPhrases,
 };
 
 export function KeyboardShortcutRow({ unicode, label, action }) {
@@ -114,10 +114,10 @@ export default function PickerKeyboardShortcuts({
     <div>
       <button
         ref={(ref) => { this.showKeyboardShortcutsButton = ref; }}
-        className={cx('DayPickerKeyboardShortcuts__show', {
-          'DayPickerKeyboardShortcuts__show--bottom-right': buttonLocation === BOTTOM_RIGHT,
-          'DayPickerKeyboardShortcuts__show--top-right': buttonLocation === TOP_RIGHT,
-          'DayPickerKeyboardShortcuts__show--top-left': buttonLocation === TOP_LEFT,
+        className={cx('PickerKeyboardShortcuts__show', {
+          'PickerKeyboardShortcuts__show--bottom-right': buttonLocation === BOTTOM_RIGHT,
+          'PickerKeyboardShortcuts__show--top-right': buttonLocation === TOP_RIGHT,
+          'PickerKeyboardShortcuts__show--top-left': buttonLocation === TOP_LEFT,
         })}
         type="button"
         aria-label={toggleButtonText}
@@ -129,26 +129,26 @@ export default function PickerKeyboardShortcuts({
           e.currentTarget.blur();
         }}
       >
-        <span className="DayPickerKeyboardShortcuts__show_span">?</span>
+        <span className="PickerKeyboardShortcuts__show_span">?</span>
       </button>
 
       {showKeyboardShortcutsPanel &&
         <div
-          className={cx('DayPickerKeyboardShortcuts__panel', {
-            'DayPickerKeyboardShortcuts__panel--block': block,
+          className={cx('PickerKeyboardShortcuts__panel', {
+            'PickerKeyboardShortcuts__panel--block': block,
           })}
           role="dialog"
-          aria-labelledby="DayPickerKeyboardShortcuts__title"
+          aria-labelledby="PickerKeyboardShortcuts__title"
         >
           <div
-            id="DayPickerKeyboardShortcuts__title"
-            className="DayPickerKeyboardShortcuts__title"
+            id="PickerKeyboardShortcuts__title"
+            className="PickerKeyboardShortcuts__title"
           >
             {phrases.keyboardShortcuts}
           </div>
 
           <button
-            className="DayPickerKeyboardShortcuts__close"
+            className="PickerKeyboardShortcuts__close"
             type="button"
             aria-label={phrases.hideKeyboardShortcutsPanel}
             onClick={closeKeyboardShortcutsPanel}
@@ -164,7 +164,7 @@ export default function PickerKeyboardShortcuts({
             <CloseButton />
           </button>
 
-          <ul className="DayPickerKeyboardShortcuts__list">
+          <ul className="PickerKeyboardShortcuts__list">
             {keyboardShortcuts.map(({ unicode, label, action }) => (
               <KeyboardShortcutRow key={label} unicode={unicode} label={label} action={action} />
             ))}
