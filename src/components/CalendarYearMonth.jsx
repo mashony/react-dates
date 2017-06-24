@@ -10,11 +10,12 @@ import { CalendarMonthPhrases } from '../defaultPhrases';
 import getPhrasePropTypes from '../utils/getPhrasePropTypes';
 import getPhrase from '../utils/getPhrase';
 
-import { BLOCKED_MODIFIER, MONTH_SIZE } from '../../constants';
+import { BLOCKED_MODIFIER, MONTH_WIDTH_SIZE, MONTH_HEIGHT_SIZE } from '../../constants';
 
 const propTypes = forbidExtraProps({
   month: momentPropTypes.momentObj,
-  monthSize: nonNegativeInteger,
+  monthWidthSize: nonNegativeInteger,
+  monthHeightSize: nonNegativeInteger,
   modifiers: PropTypes.instanceOf(Set),
   isFocused: PropTypes.bool,
   tabIndex: PropTypes.oneOf([0, -1]),
@@ -29,7 +30,8 @@ const propTypes = forbidExtraProps({
 
 const defaultProps = {
   month: moment(),
-  monthSize: MONTH_SIZE,
+  monthWidthSize: MONTH_WIDTH_SIZE,
+  monthHeightSize: MONTH_HEIGHT_SIZE,
   modifiers: new Set(),
   isFocused: false,
   tabIndex: -1,
@@ -74,7 +76,8 @@ export default class CalendarYearMonth extends React.Component {
   render() {
     const {
       month,
-      monthSize,
+      monthWidthSize,
+      monthHeightSize,
       modifiers,
       renderMonth,
       tabIndex,
@@ -99,8 +102,8 @@ export default class CalendarYearMonth extends React.Component {
     }
 
     const monthSizeStyles = {
-      width: monthSize,
-      height: monthSize - 1,
+      width: monthWidthSize,
+      height: monthHeightSize - 1,
     };
 
     return (
@@ -116,7 +119,7 @@ export default class CalendarYearMonth extends React.Component {
           onClick={(e) => { this.onMonthClick(month, e); }}
           tabIndex={tabIndex}
         >
-          {renderMonth ? renderMonth(month) : month.format('D')}
+          {renderMonth ? renderMonth(month) : month.format('MMMM')}
         </button>
       </td>
     );

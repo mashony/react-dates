@@ -23,7 +23,8 @@ import {
   HORIZONTAL_ORIENTATION,
   VERTICAL_ORIENTATION,
   VERTICAL_SCROLLABLE,
-  MONTH_SIZE,
+  MONTH_WIDTH_SIZE,
+  MONTH_HEIGHT_SIZE,
 } from '../../constants';
 
 const propTypes = forbidExtraProps({
@@ -31,7 +32,8 @@ const propTypes = forbidExtraProps({
   isVisible: PropTypes.bool,
   modifiers: PropTypes.object,
   orientation: ScrollableOrientationShape,
-  monthSize: nonNegativeInteger,
+  monthWidthSize: nonNegativeInteger,
+  monthHeightSize: nonNegativeInteger,
   onMonthClick: PropTypes.func,
   onMonthMouseEnter: PropTypes.func,
   onMonthMouseLeave: PropTypes.func,
@@ -51,7 +53,8 @@ const defaultProps = {
   isVisible: true,
   modifiers: {},
   orientation: HORIZONTAL_ORIENTATION,
-  monthSize: MONTH_SIZE,
+  monthWidthSize: MONTH_WIDTH_SIZE,
+  monthHeightSize: MONTH_HEIGHT_SIZE,
   onMonthClick() {},
   onMonthMouseEnter() {},
   onMonthMouseLeave() {},
@@ -99,7 +102,8 @@ export default class CalendarYear extends React.Component {
       onMonthMouseLeave,
       renderYear,
       renderMonth,
-      monthSize,
+      monthWidthSize,
+      monthHeightSize,
       focusedDate,
       isFocused,
       phrases,
@@ -127,7 +131,8 @@ export default class CalendarYear extends React.Component {
                 {monthBlock.map((month, index) => (
                   <CalendarYearMonth
                     month={month}
-                    monthSize={monthSize}
+                    monthWidthSize={monthWidthSize}
+                    monthHeightSize={monthHeightSize}
                     tabIndex={isVisible && isSameMonth(month, focusedDate) ? 0 : -1}
                     isFocused={isFocused}
                     key={index}

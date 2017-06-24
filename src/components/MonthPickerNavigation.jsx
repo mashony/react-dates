@@ -44,7 +44,7 @@ const defaultProps = {
   isRTL: false,
 };
 
-export default function PickerNavigation(props) {
+export default function MonthPickerNavigation(props) {
   const {
     navPrev,
     navNext,
@@ -122,5 +122,5 @@ export default function PickerNavigation(props) {
   );
 }
 
-PickerNavigation.propTypes = propTypes;
-PickerNavigation.defaultProps = defaultProps;
+MonthPickerNavigation.propTypes = propTypes;
+MonthPickerNavigation.defaultProps = defaultProps;

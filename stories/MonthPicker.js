@@ -1,6 +1,9 @@
 import React from 'react';
+import moment from 'moment';
 import { storiesOf } from '@kadira/storybook';
 import MonthPicker from '../src/components/MonthPicker';
+import toISODateString from '../src/utils/toISODateString';
+import toISOYearString from '../src/utils/toISOYearString';
 
 import {
   VERTICAL_ORIENTATION,
@@ -45,18 +48,26 @@ const TestCustomInfoPanel = () => (
   </div>
 );
 
+const modifiers = {
+  [toISOYearString(moment().startOf('year'))]: {
+    [toISODateString(moment().startOf('month'))]: new Set(['selected']),
+  },
+};
+
 storiesOf('MonthPicker', module)
   .addWithInfo('default', () => (
     <MonthPicker />
   ))
   .addWithInfo('different initial year', () => (
-    <MonthPicker />
+    <MonthPicker initialVisibleYear={() => moment('1984')} />
   ))
   .addWithInfo('highlight actual month', () => (
-    <MonthPicker />
-  ))  
+    <MonthPicker
+      modifiers={modifiers}
+    />
+  ))
   .addWithInfo('with custom month size', () => (
-    <MonthPicker monthSize={50} />
+    <MonthPicker monthWidthSize={150} monthHeightSize={50} />
   ))
   .addWithInfo('more than one year', () => (
     <MonthPicker numberOfYears={2} />
@@ -71,7 +82,7 @@ storiesOf('MonthPicker', module)
     <div
       style={{
         height: 568,
-        width: 320,
+        width: 400,
       }}
     >
       <MonthPicker
@@ -84,7 +95,8 @@ storiesOf('MonthPicker', module)
     <MonthPicker
       numberOfYears={2}
       orientation={VERTICAL_ORIENTATION}
-      monthSize={50}
+      monthWidthSize={80}
+      monthHeightSize={30}
     />
   ))
   .addWithInfo('with custom arrows', () => (

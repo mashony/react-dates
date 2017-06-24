@@ -30,7 +30,8 @@ import {
   HORIZONTAL_ORIENTATION,
   VERTICAL_ORIENTATION,
   VERTICAL_SCROLLABLE,
-  MONTH_SIZE,
+  MONTH_WIDTH_SIZE,
+  MONTH_HEIGHT_SIZE,
 } from '../../constants';
 
 const YEAR_PADDING = 23;
@@ -48,7 +49,8 @@ const propTypes = forbidExtraProps({
   initialVisibleYear: PropTypes.func,
   renderCalendarInfo: PropTypes.func,
   hideKeyboardShortcutsPanel: PropTypes.bool,
-  monthSize: nonNegativeInteger,
+  monthWidthSize: nonNegativeInteger,
+  monthHeightSize: nonNegativeInteger,
   isRTL: PropTypes.bool,
 
   // navigation props
@@ -89,7 +91,8 @@ export const defaultProps = {
   initialVisibleYear: () => moment(),
   renderCalendarInfo: null,
   hideKeyboardShortcutsPanel: false,
-  monthSize: MONTH_SIZE,
+  monthWidthSize: MONTH_WIDTH_SIZE,
+  monthHeightSize: MONTH_HEIGHT_SIZE,
   isRTL: false,
 
   // navigation props
@@ -100,11 +103,11 @@ export const defaultProps = {
   onMultiplyScrollableYears() {},
 
   // year props
-  renderYear: () => null,
+  renderYear: null,
 
   // month props
   modifiers: {},
-  renderMonth: () => null,
+  renderMonth: null,
   onMonthClick() {},
   onMonthMouseEnter() {},
   onMonthMouseLeave() {},
@@ -164,8 +167,8 @@ export function calculateDimension(el, axis, borderBox = false, withMargin = fal
 }
 
 function getMonthHeight(el) {
-  const caption = el.querySelector('.js-CalendarMonth__caption');
-  const grid = el.querySelector('.js-CalendarMonth__grid');
+  const caption = el.querySelector('.js-CalendarYear__caption');
+  const grid = el.querySelector('.js-CalendarYear__grid');
 
   // Need to separate out table children for FF
   // Add an additional +1 for the border
@@ -186,7 +189,7 @@ export default class MonthPicker extends React.Component {
     }
 
     const translationValue =
-      props.isRTL && this.isHorizontal() ? -getCalendarYearWidth(props.monthSize) : 0;
+      props.isRTL && this.isHorizontal() ? -getCalendarYearWidth(props.monthWidthSize) : 0;
 
     this.hasSetinitialVisibleYear = !props.hidden;
     this.state = {
@@ -194,7 +197,7 @@ export default class MonthPicker extends React.Component {
       yearTransition: null,
       translationValue,
       scrollableYearMultiple: 1,
-      calendarYearWidth: getCalendarYearWidth(props.monthSize),
+      calendarYearWidth: getCalendarYearWidth(props.monthWidthSize),
       focusedDate: (!props.hidden || props.isFocused) ? focusedDate : null,
       nextFocusedDate: null,
       showKeyboardShortcuts: props.showKeyboardShortcuts,
@@ -241,9 +244,9 @@ export default class MonthPicker extends React.Component {
       }
     }
 
-    if (nextProps.monthSize !== this.props.monthSize) {
+    if (nextProps.monthWidthSize !== this.props.monthWidthSize) {
       this.setState({
-        calendarYearWidth: getCalendarYearWidth(nextProps.monthSize),
+        calendarYearWidth: getCalendarYearWidth(nextProps.monthWidthSize),
       });
     }
 
@@ -683,7 +686,8 @@ export default class MonthPicker extends React.Component {
       hideKeyboardShortcutsPanel,
       onOutsideClick,
       yearFormat,
-      monthSize,
+      monthWidthSize,
+      monthHeightSize,
       isFocused,
       phrases,
     } = this.props;
@@ -778,7 +782,8 @@ export default class MonthPicker extends React.Component {
                 renderMonth={renderMonth}
                 onYearTransitionEnd={this.updateStateAfterYearTransition}
                 yearFormat={yearFormat}
-                monthSize={monthSize}
+                monthWidthSize={monthWidthSize}
+                monthHeightSize={monthHeightSize}
                 isFocused={shouldFocusDate}
                 focusedDate={focusedDate}
                 phrases={phrases}

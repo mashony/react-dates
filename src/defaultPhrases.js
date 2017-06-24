@@ -22,6 +22,8 @@ const moveFocusByOneDay = 'Move backward (left) and forward (right) by one day';
 const moveFocusByOneWeek = 'Move backward (up) and forward (down) by one week';
 const moveFocusByOneMonth = 'Switch months';
 const moveFocusByOneYear = 'Switch years';
+const moveFocustoStartOfMonthsRow = 'Move to the first month of the row';
+const moveFocusByThreeMonths = 'Move backward (up) and forward (down) by three months';
 const moveFocustoStartAndEndOfWeek = 'Go to the first or last day of a week';
 const returnFocusToInput = 'Return to the date input field';
 const keyboardNavigationInstructions = `Press the down arrow key to interact with the calendar and
@@ -176,7 +178,8 @@ export const MonthPickerPhrases = {
   selectFocusedDate,
   moveFocusByOneMonth,
   moveFocusByOneYear,
-  moveFocustoStartAndEndOfWeek,
+  moveFocustoStartOfMonthsRow,
+  moveFocusByThreeMonths,
   returnFocusToInput,
   chooseAvailableStartDate,
   chooseAvailableEndDate,

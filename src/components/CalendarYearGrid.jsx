@@ -15,6 +15,7 @@ import CalendarYear from './CalendarYear';
 import isTransitionEndSupported from '../utils/isTransitionEndSupported';
 import getTransformStyles from '../utils/getTransformStyles';
 import getCalendarYearWidth from '../utils/getCalendarYearWidth';
+import toISOYearString from '../utils/toISOYearString';
 import isAfterMonth from '../utils/isAfterMonth';
 
 import ScrollableOrientationShape from '../shapes/ScrollableOrientationShape';
@@ -23,7 +24,8 @@ import {
   HORIZONTAL_ORIENTATION,
   VERTICAL_ORIENTATION,
   VERTICAL_SCROLLABLE,
-  MONTH_SIZE,
+  MONTH_WIDTH_SIZE,
+  MONTH_HEIGHT_SIZE,
 } from '../../constants';
 
 const propTypes = forbidExtraProps({
@@ -40,7 +42,8 @@ const propTypes = forbidExtraProps({
   renderYear: PropTypes.func,
   renderMonth: PropTypes.func,
   transformValue: PropTypes.string,
-  monthSize: nonNegativeInteger,
+  monthWidthSize: nonNegativeInteger,
+  monthHeightSize: nonNegativeInteger,
   focusedDate: momentPropTypes.momentObj, // indicates focusable day
   isFocused: PropTypes.bool, // indicates whether or not to move focus to focusable day
 
@@ -63,7 +66,8 @@ const defaultProps = {
   renderYear: null,
   renderMonth: null,
   transformValue: 'none',
-  monthSize: MONTH_SIZE,
+  monthWidthSize: MONTH_WIDTH_SIZE,
+  monthHeightSize: MONTH_HEIGHT_SIZE,
   focusedDate: null,
   isFocused: false,
 
@@ -164,7 +168,8 @@ export default class CalendarYearGrid extends React.Component {
       yearFormat,
       orientation,
       transformValue,
-      monthSize,
+      monthWidthSize,
+      monthHeightSize,
       onMonthMouseEnter,
       onMonthMouseLeave,
       onMonthClick,
@@ -188,7 +193,7 @@ export default class CalendarYearGrid extends React.Component {
       'CalendarYearGrid--animating': isAnimating,
     });
 
-    const calendarYearWidth = getCalendarYearWidth(monthSize);
+    const calendarYearWidth = getCalendarYearWidth(monthWidthSize);
 
     const width = isVertical || isVerticalScrollable ?
       calendarYearWidth :
@@ -206,16 +211,16 @@ export default class CalendarYearGrid extends React.Component {
         style={style}
         onTransitionEnd={onYearTransitionEnd}
       >
-        <div>hola2</div>
         {years.map((year, i) => {
           const isVisible =
             (i >= firstVisibleYearIndex) && (i < firstVisibleYearIndex + numberOfYears);
+          const yearString = toISOYearString(year);
           return (
             <CalendarYear
               key={year}
               year={year}
               isVisible={isVisible}
-              modifiers={modifiers[year]}
+              modifiers={modifiers[yearString]}
               yearFormat={yearFormat}
               orientation={orientation}
               onMonthMouseEnter={onMonthMouseEnter}
@@ -223,7 +228,8 @@ export default class CalendarYearGrid extends React.Component {
               onMonthClick={onMonthClick}
               renderYear={renderYear}
               renderMonth={renderMonth}
-              monthSize={monthSize}
+              monthWidthSize={monthWidthSize}
+              monthHeightSize={monthHeightSize}
               focusedDate={isVisible ? focusedDate : null}
               isFocused={isFocused}
               phrases={phrases}

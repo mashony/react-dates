@@ -59,7 +59,7 @@ KeyboardShortcutRow.propTypes = {
   action: PropTypes.string.isRequired,
 };
 
-export default function PickerKeyboardShortcuts({
+export default function MonthPickerKeyboardShortcuts({
   block,
   buttonLocation,
   showKeyboardShortcutsPanel,
@@ -114,10 +114,10 @@ export default function PickerKeyboardShortcuts({
     <div>
       <button
         ref={(ref) => { this.showKeyboardShortcutsButton = ref; }}
-        className={cx('PickerKeyboardShortcuts__show', {
-          'PickerKeyboardShortcuts__show--bottom-right': buttonLocation === BOTTOM_RIGHT,
-          'PickerKeyboardShortcuts__show--top-right': buttonLocation === TOP_RIGHT,
-          'PickerKeyboardShortcuts__show--top-left': buttonLocation === TOP_LEFT,
+        className={cx('MonthPickerKeyboardShortcuts__show', {
+          'MonthPickerKeyboardShortcuts__show--bottom-right': buttonLocation === BOTTOM_RIGHT,
+          'MonthPickerKeyboardShortcuts__show--top-right': buttonLocation === TOP_RIGHT,
+          'MonthPickerKeyboardShortcuts__show--top-left': buttonLocation === TOP_LEFT,
         })}
         type="button"
         aria-label={toggleButtonText}
@@ -129,26 +129,26 @@ export default function PickerKeyboardShortcuts({
           e.currentTarget.blur();
         }}
       >
-        <span className="PickerKeyboardShortcuts__show_span">?</span>
+        <span className="MonthPickerKeyboardShortcuts__show_span">?</span>
       </button>
 
       {showKeyboardShortcutsPanel &&
         <div
-          className={cx('PickerKeyboardShortcuts__panel', {
-            'PickerKeyboardShortcuts__panel--block': block,
+          className={cx('MonthPickerKeyboardShortcuts__panel', {
+            'MonthPickerKeyboardShortcuts__panel--block': block,
           })}
           role="dialog"
-          aria-labelledby="PickerKeyboardShortcuts__title"
+          aria-labelledby="MonthPickerKeyboardShortcuts__title"
         >
           <div
-            id="PickerKeyboardShortcuts__title"
-            className="PickerKeyboardShortcuts__title"
+            id="MonthPickerKeyboardShortcuts__title"
+            className="MonthPickerKeyboardShortcuts__title"
           >
             {phrases.keyboardShortcuts}
           </div>
 
           <button
-            className="PickerKeyboardShortcuts__close"
+            className="MonthPickerKeyboardShortcuts__close"
             type="button"
             aria-label={phrases.hideKeyboardShortcutsPanel}
             onClick={closeKeyboardShortcutsPanel}
@@ -164,7 +164,7 @@ export default function PickerKeyboardShortcuts({
             <CloseButton />
           </button>
 
-          <ul className="PickerKeyboardShortcuts__list">
+          <ul className="MonthPickerKeyboardShortcuts__list">
             {keyboardShortcuts.map(({ unicode, label, action }) => (
               <KeyboardShortcutRow key={label} unicode={unicode} label={label} action={action} />
             ))}
@@ -175,5 +175,5 @@ export default function PickerKeyboardShortcuts({
   );
 }
 
-PickerKeyboardShortcuts.propTypes = propTypes;
-PickerKeyboardShortcuts.defaultProps = defaultProps;
+MonthPickerKeyboardShortcuts.propTypes = propTypes;
+MonthPickerKeyboardShortcuts.defaultProps = defaultProps;
