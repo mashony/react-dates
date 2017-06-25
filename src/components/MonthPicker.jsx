@@ -23,6 +23,7 @@ import MonthPickerKeyboardShortcuts, {
 import getTransformStyles from '../utils/getTransformStyles';
 import getCalendarYearWidth from '../utils/getCalendarYearWidth';
 import getActiveElement from '../utils/getActiveElement';
+import isMonthVisible from '../utils/isMonthVisible';
 
 import ScrollableOrientationShape from '../shapes/ScrollableOrientationShape';
 
@@ -56,8 +57,8 @@ const propTypes = forbidExtraProps({
   // navigation props
   navPrev: PropTypes.node,
   navNext: PropTypes.node,
-  onPrevClick: PropTypes.func,
-  onNextClick: PropTypes.func,
+  onPrevYearClick: PropTypes.func,
+  onNextYearClick: PropTypes.func,
   onMultiplyScrollableYears: PropTypes.func, // VERTICAL_SCROLLABLE MonthPickers only
 
   // year props
@@ -98,8 +99,8 @@ export const defaultProps = {
   // navigation props
   navPrev: null,
   navNext: null,
-  onPrevClick() {},
-  onNextClick() {},
+  onPrevYearClick() {},
+  onNextYearClick() {},
   onMultiplyScrollableYears() {},
 
   // year props
@@ -184,8 +185,8 @@ export default class MonthPicker extends React.Component {
     const currentYear = props.hidden ? moment() : props.initialVisibleYear();
 
     let focusedDate = currentYear.clone().startOf('month');
-    if (props.getFirstFocusableDay) {
-      focusedDate = props.getFirstFocusableDay(currentYear);
+    if (props.getFirstFocusableMonth) {
+      focusedDate = props.getFirstFocusableMonth(currentYear);
     }
 
     const translationValue =
@@ -207,8 +208,8 @@ export default class MonthPicker extends React.Component {
     };
 
     this.onKeyDown = this.onKeyDown.bind(this);
-    this.onPrevClick = this.onPrevClick.bind(this);
-    this.onNextClick = this.onNextClick.bind(this);
+    this.onPrevYearClick = this.onPrevYearClick.bind(this);
+    this.onNextYearClick = this.onNextYearClick.bind(this);
     this.setCalendarYearGridRef = this.setCalendarYearGridRef.bind(this);
     this.multiplyScrollableYears = this.multiplyScrollableYears.bind(this);
     this.updateStateAfterYearTransition = this.updateStateAfterYearTransition.bind(this);
@@ -221,8 +222,8 @@ export default class MonthPicker extends React.Component {
     this.setState({ isTouchDevice: isTouchDevice() });
 
     if (this.isHorizontal()) {
-      this.adjustYearPickerHeight();
-      this.initializeYearPickerWidth();
+      this.adjustMonthPickerHeight();
+      this.initializeMonthPickerWidth();
     }
   }
 
@@ -239,8 +240,8 @@ export default class MonthPicker extends React.Component {
       }
 
       if (!this.monthPickerWidth && this.isHorizontal()) {
-        this.initializeYearPickerWidth();
-        this.adjustYearPickerHeight();
+        this.initializeMonthPickerWidth();
+        this.adjustMonthPickerHeight();
       }
     }
 
@@ -252,7 +253,7 @@ export default class MonthPicker extends React.Component {
 
     if (isFocused !== this.props.isFocused) {
       if (isFocused) {
-        const focusedDate = this.getFocusedDay(currentYear);
+        const focusedDate = this.getFocusedMonth(currentYear);
 
         let onKeyboardShortcutsPanelClose = this.state.onKeyboardShortcutsPanelClose;
         if (nextProps.showKeyboardShortcuts) {
@@ -280,7 +281,7 @@ export default class MonthPicker extends React.Component {
     const { yearTransition, currentYear, focusedDate } = this.state;
     if (yearTransition || !currentYear.isSame(prevState.currentYear)) {
       if (this.isHorizontal()) {
-        this.adjustYearPickerHeight();
+        this.adjustMonthPickerHeight();
       }
     }
 
@@ -303,7 +304,7 @@ export default class MonthPicker extends React.Component {
 
     const newFocusedDate = focusedDate.clone();
 
-    let didTransitionMonth = false;
+    let didTransitionYear = false;
 
     // focus might be anywhere when the keyboard shortcuts panel is opened so we want to
     // return it to wherever it was before when the panel was opened
@@ -315,44 +316,44 @@ export default class MonthPicker extends React.Component {
     switch (e.key) {
       case 'ArrowUp':
         e.preventDefault();
-        newFocusedDate.subtract(1, 'week');
-        didTransitionMonth = this.maybeTransitionPrevMonth(newFocusedDate);
+        newFocusedDate.subtract(3, 'month');
+        didTransitionYear = this.maybeTransitionPrevYear(newFocusedDate);
         break;
       case 'ArrowLeft':
         e.preventDefault();
-        newFocusedDate.subtract(1, 'day');
-        didTransitionMonth = this.maybeTransitionPrevMonth(newFocusedDate);
+        newFocusedDate.subtract(1, 'month');
+        didTransitionYear = this.maybeTransitionPrevYear(newFocusedDate);
         break;
       case 'Home':
         e.preventDefault();
-        newFocusedDate.startOf('week');
-        didTransitionMonth = this.maybeTransitionPrevMonth(newFocusedDate);
+        newFocusedDate.startOf('year');
+        didTransitionYear = this.maybeTransitionPrevYear(newFocusedDate);
         break;
       case 'PageUp':
         e.preventDefault();
-        newFocusedDate.subtract(1, 'month');
-        didTransitionMonth = this.maybeTransitionPrevMonth(newFocusedDate);
+        newFocusedDate.startOf('year');
+        didTransitionYear = this.maybeTransitionPrevYear(newFocusedDate);
         break;
 
       case 'ArrowDown':
         e.preventDefault();
-        newFocusedDate.add(1, 'week');
-        didTransitionMonth = this.maybeTransitionNextMonth(newFocusedDate);
+        newFocusedDate.add(3, 'month');
+        didTransitionYear = this.maybeTransitionNextYear(newFocusedDate);
         break;
       case 'ArrowRight':
         e.preventDefault();
-        newFocusedDate.add(1, 'day');
-        didTransitionMonth = this.maybeTransitionNextMonth(newFocusedDate);
+        newFocusedDate.add(1, 'month');
+        didTransitionYear = this.maybeTransitionNextYear(newFocusedDate);
         break;
       case 'End':
         e.preventDefault();
-        newFocusedDate.endOf('week');
-        didTransitionMonth = this.maybeTransitionNextMonth(newFocusedDate);
+        newFocusedDate.endOf('year');
+        didTransitionYear = this.maybeTransitionNextYear(newFocusedDate);
         break;
       case 'PageDown':
         e.preventDefault();
-        newFocusedDate.add(1, 'month');
-        didTransitionMonth = this.maybeTransitionNextMonth(newFocusedDate);
+        newFocusedDate.endOf('year');
+        didTransitionYear = this.maybeTransitionNextYear(newFocusedDate);
         break;
 
       case '?':
@@ -374,14 +375,14 @@ export default class MonthPicker extends React.Component {
     // If there was a month transition, do not update the focused date until the transition has
     // completed. Otherwise, attempting to focus on a DOM node may interrupt the CSS animation. If
     // didTransitionMonth is true, the focusedDate gets updated in #updateStateAfterYearTransition
-    if (!didTransitionMonth) {
+    if (!didTransitionYear) {
       this.setState({
         focusedDate: newFocusedDate,
       });
     }
   }
 
-  onPrevClick(nextFocusedDate, e) {
+  onPrevYearClick(nextFocusedDate, e) {
     const { isRTL } = this.props;
 
     if (e) e.preventDefault();
@@ -393,7 +394,7 @@ export default class MonthPicker extends React.Component {
       translationValue = -2 * this.monthPickerWidth;
     }
 
-    // The first CalendarMonth is always positioned absolute at top: 0 or left: 0
+    // The first CalendarYear is always positioned absolute at top: 0 or left: 0
     // so we need to transform it to the appropriate location before the animation.
     // This behavior is because we would otherwise need a double-render in order to
     // adjust the container position once we had the height the first calendar
@@ -409,7 +410,7 @@ export default class MonthPicker extends React.Component {
     });
   }
 
-  onNextClick(nextFocusedDate, e) {
+  onNextYearClick(nextFocusedDate, e) {
     const { isRTL } = this.props;
 
     if (e) e.preventDefault();
@@ -430,14 +431,14 @@ export default class MonthPicker extends React.Component {
   }
 
   getFocusedMonth(newYear) {
-    const { getFirstFocusableMonth } = this.props;
+    const { getFirstFocusableMonth, numberOfYears } = this.props;
 
     let focusedDate;
     if (getFirstFocusableMonth) {
       focusedDate = getFirstFocusableMonth(newYear);
     }
 
-    if (newYear && !focusedDate) {
+    if (newYear && (!focusedDate || !isMonthVisible(focusedDate, newYear, numberOfYears))) {
       focusedDate = newYear.clone().startOf('month');
     }
 
@@ -452,26 +453,31 @@ export default class MonthPicker extends React.Component {
     this.calendarYearGrid = ref;
   }
 
-  maybeTransitionNextMonth(newFocusedDate) {
-    const { focusedDate } = this.state;
+  maybeTransitionNextYear(newFocusedDate) {
+    const { numberOfYears } = this.props;
+    const { currentYear, focusedDate } = this.state;
 
-    const newFocusedDateMonth = newFocusedDate.month();
-    const focusedDateMonth = focusedDate.month();
-    if (newFocusedDateMonth !== focusedDateMonth) {
-      this.onNextClick(newFocusedDate);
+    const newFocusedYear = newFocusedDate.year();
+    const focusedYear = focusedDate.year();
+
+    const isNewFocusedDateVisible = isMonthVisible(newFocusedDate, currentYear, numberOfYears);
+    if (newFocusedYear !== focusedYear && !isNewFocusedDateVisible) {
+      this.onNextYearClick(newFocusedDate);
       return true;
     }
 
     return false;
   }
 
-  maybeTransitionPrevMonth(newFocusedDate) {
-    const { focusedDate } = this.state;
+  maybeTransitionPrevYear(newFocusedDate) {
+    const { numberOfYears } = this.props;
+    const { currentYear, focusedDate } = this.state;
 
-    const newFocusedDateMonth = newFocusedDate.month();
-    const focusedDateMonth = focusedDate.month();
-    if (newFocusedDateMonth !== focusedDateMonth) {
-      this.onPrevClick(newFocusedDate);
+    const newFocusedYear = newFocusedDate.year();
+    const focusedYear = focusedDate.year();
+    const isNewFocusedDateVisible = isMonthVisible(newFocusedDate, currentYear, numberOfYears);
+    if (newFocusedYear !== focusedYear && !isNewFocusedDateVisible) {
+      this.onPrevYearClick(newFocusedDate);
       return true;
     }
 
@@ -498,7 +504,7 @@ export default class MonthPicker extends React.Component {
       this.props.orientation === VERTICAL_SCROLLABLE;
   }
 
-  initializeYearPickerWidth() {
+  initializeMonthPickerWidth() {
     if (this.calendarYearGrid) {
       // eslint-disable-next-line react/no-find-dom-node
       const calendarYearGridDOMNode = ReactDOM.findDOMNode(this.calendarYearGrid);
@@ -514,8 +520,8 @@ export default class MonthPicker extends React.Component {
 
   updateStateAfterYearTransition() {
     const {
-      onPrevClick,
-      onNextClick,
+      onPrevYearClick,
+      onNextYearClick,
     } = this.props;
 
     const {
@@ -530,10 +536,10 @@ export default class MonthPicker extends React.Component {
 
     const newYear = currentYear.clone();
     if (yearTransition === PREV_TRANSITION) {
-      if (onPrevClick) onPrevClick();
+      if (onPrevYearClick) onPrevYearClick();
       newYear.subtract(1, 'year');
     } else if (yearTransition === NEXT_TRANSITION) {
-      if (onNextClick) onNextClick();
+      if (onNextYearClick) onNextYearClick();
       newYear.add(1, 'year');
     }
 
@@ -541,7 +547,7 @@ export default class MonthPicker extends React.Component {
     if (nextFocusedDate) {
       newFocusedDate = nextFocusedDate;
     } else if (!focusedDate && !withMouseInteractions) {
-      newFocusedDate = this.getFocusedDay(newYear);
+      newFocusedDate = this.getFocusedMonth(newYear);
     }
 
     if (this.calendarYearGrid) {
@@ -574,7 +580,7 @@ export default class MonthPicker extends React.Component {
     });
   }
 
-  adjustYearPickerHeight() {
+  adjustMonthPickerHeight() {
     const heights = [];
 
     Array.prototype.forEach.call(this.transitionContainer.querySelectorAll('.CalendarYear'),
@@ -640,17 +646,17 @@ export default class MonthPicker extends React.Component {
       isRTL,
     } = this.props;
 
-    let onNextClick;
+    let onNextYearClick;
     if (orientation === VERTICAL_SCROLLABLE) {
-      onNextClick = this.multiplyScrollableYears;
+      onNextYearClick = this.multiplyScrollableYears;
     } else {
-      onNextClick = (e) => { this.onNextClick(null, e); };
+      onNextYearClick = (e) => { this.onNextYearClick(null, e); };
     }
 
     return (
       <MonthPickerNavigation
-        onPrevClick={(e) => { this.onPrevClick(null, e); }}
-        onNextClick={onNextClick}
+        onPrevYearClick={(e) => { this.onPrevYearClick(null, e); }}
+        onNextYearClick={onNextYearClick}
         navPrev={navPrev}
         navNext={navNext}
         orientation={orientation}

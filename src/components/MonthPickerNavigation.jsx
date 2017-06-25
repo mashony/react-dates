@@ -22,8 +22,8 @@ const propTypes = forbidExtraProps({
   navNext: PropTypes.node,
   orientation: ScrollableOrientationShape,
 
-  onPrevClick: PropTypes.func,
-  onNextClick: PropTypes.func,
+  onPrevYearClick: PropTypes.func,
+  onNextYearClick: PropTypes.func,
 
   // internationalization
   phrases: PropTypes.shape(getPhrasePropTypes(MonthPickerNavigationPhrases)),
@@ -36,8 +36,8 @@ const defaultProps = {
   navNext: null,
   orientation: HORIZONTAL_ORIENTATION,
 
-  onPrevClick() {},
-  onNextClick() {},
+  onPrevYearClick() {},
+  onNextYearClick() {},
 
   // internationalization
   phrases: MonthPickerNavigationPhrases,
@@ -48,8 +48,8 @@ export default function MonthPickerNavigation(props) {
   const {
     navPrev,
     navNext,
-    onPrevClick,
-    onNextClick,
+    onPrevYearClick,
+    onNextYearClick,
     orientation,
     phrases,
     isRTL,
@@ -77,7 +77,7 @@ export default function MonthPickerNavigation(props) {
     }
   }
 
-  const navClassNames = cx('PickerNavigation', {
+  const navClassNames = cx('MonthPickerNavigation', {
     'MonthPickerNavigation--horizontal': !isVertical,
     'MonthPickerNavigation--vertical': isVertical,
     'MonthPickerNavigation--vertical-scrollable': isVerticalScrollable,
@@ -98,7 +98,7 @@ export default function MonthPickerNavigation(props) {
           type="button"
           aria-label={phrases.jumpToPrevMonth}
           className={prevClassNames}
-          onClick={onPrevClick}
+          onClick={onPrevYearClick}
           onMouseUp={(e) => {
             e.currentTarget.blur();
           }}
@@ -111,7 +111,7 @@ export default function MonthPickerNavigation(props) {
         type="button"
         aria-label={phrases.jumpToNextMonth}
         className={nextClassNames}
-        onClick={onNextClick}
+        onClick={onNextYearClick}
         onMouseUp={(e) => {
           e.currentTarget.blur();
         }}
