@@ -10,7 +10,7 @@ import DayPickerSingleDateController from '../src/components/DayPickerSingleDate
 
 import ScrollableOrientationShape from '../src/shapes/ScrollableOrientationShape';
 
-import { HORIZONTAL_ORIENTATION } from '../constants';
+import { HORIZONTAL_ORIENTATION } from '../src/constants';
 import isInclusivelyAfterDay from '../src/utils/isInclusivelyAfterDay';
 
 const propTypes = forbidExtraProps({
@@ -20,7 +20,6 @@ const propTypes = forbidExtraProps({
   showInput: PropTypes.bool,
 
   keepOpenOnDateSelect: PropTypes.bool,
-  minimumNights: PropTypes.number,
   isOutsideRange: PropTypes.func,
   isDayBlocked: PropTypes.func,
   isDayHighlighted: PropTypes.func,
@@ -39,7 +38,8 @@ const propTypes = forbidExtraProps({
   onPrevMonthClick: PropTypes.func,
   onNextMonthClick: PropTypes.func,
   onOutsideClick: PropTypes.func,
-  renderDay: PropTypes.func,
+  renderCalendarDay: PropTypes.func,
+  renderDayContents: PropTypes.func,
 
   // i18n
   monthFormat: PropTypes.string,
@@ -54,8 +54,8 @@ const defaultProps = {
   showInput: false,
 
   // day presentation and interaction related props
-  renderDay: null,
-  minimumNights: 1,
+  renderCalendarDay: undefined,
+  renderDayContents: null,
   isDayBlocked: () => false,
   isOutsideRange: day => !isInclusivelyAfterDay(day, moment()),
   isDayHighlighted: () => false,

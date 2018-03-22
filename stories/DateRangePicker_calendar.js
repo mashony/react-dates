@@ -2,7 +2,7 @@ import React from 'react';
 import moment from 'moment';
 import { storiesOf } from '@storybook/react';
 
-import { VERTICAL_ORIENTATION, ANCHOR_RIGHT } from '../constants';
+import { VERTICAL_ORIENTATION, ANCHOR_RIGHT, OPEN_UP } from '../src/constants';
 
 import DateRangePickerWrapper from '../examples/DateRangePickerWrapper';
 
@@ -36,7 +36,6 @@ const TestCustomInfoPanel = () => (
   <div
     style={{
       padding: '10px 21px',
-      borderTop: '1px solid #dce0e0',
       color: '#484848',
     }}
   >
@@ -47,6 +46,14 @@ const TestCustomInfoPanel = () => (
 storiesOf('DRP - Calendar Props', module)
   .addWithInfo('default', () => (
     <DateRangePickerWrapper autoFocus />
+  ))
+  .addWithInfo('open up', () => (
+    <div style={{ marginTop: '450px' }}>
+      <DateRangePickerWrapper
+        openDirection={OPEN_UP}
+        autoFocus
+      />
+    </div>
   ))
   .addWithInfo('single month', () => (
     <DateRangePickerWrapper numberOfMonths={1} autoFocus />
@@ -122,7 +129,7 @@ storiesOf('DRP - Calendar Props', module)
       autoFocus
     />
   ))
-  .addWithInfo('with info panel', () => (
+  .addWithInfo('with info panel default', () => (
     <DateRangePickerWrapper
       renderCalendarInfo={() => (
         <TestCustomInfoPanel />
@@ -130,7 +137,43 @@ storiesOf('DRP - Calendar Props', module)
       autoFocus
     />
   ))
-  .addWithInfo('with keyboard shorcuts panel hidden', () => (
+  .addWithInfo('with info panel before', () => (
+    <DateRangePickerWrapper
+      calendarInfoPosition="before"
+      renderCalendarInfo={() => (
+        <TestCustomInfoPanel />
+      )}
+      autoFocus
+    />
+  ))
+  .addWithInfo('with info panel after', () => (
+    <DateRangePickerWrapper
+      calendarInfoPosition="after"
+      renderCalendarInfo={() => (
+        <TestCustomInfoPanel />
+      )}
+      autoFocus
+    />
+  ))
+  .addWithInfo('with info panel bottom', () => (
+    <DateRangePickerWrapper
+      calendarInfoPosition="bottom"
+      renderCalendarInfo={() => (
+        <TestCustomInfoPanel />
+      )}
+      autoFocus
+    />
+  ))
+  .addWithInfo('with info panel top', () => (
+    <DateRangePickerWrapper
+      calendarInfoPosition="top"
+      renderCalendarInfo={() => (
+        <TestCustomInfoPanel />
+      )}
+      autoFocus
+    />
+  ))
+  .addWithInfo('with keyboard shortcuts panel hidden', () => (
     <DateRangePickerWrapper
       hideKeyboardShortcutsPanel
       autoFocus
@@ -157,4 +200,23 @@ storiesOf('DRP - Calendar Props', module)
       firstDayOfWeek={3}
       autoFocus
     />
+  ))
+  .addWithInfo('with onClose handler', () => (
+    <DateRangePickerWrapper
+      onClose={({ startDate, endDate }) => alert(`onClose: startDate = ${startDate}, endDate = ${endDate}`)}
+      autoFocus
+    />
+  ))
+  .addWithInfo('with no animation', () => (
+    <DateRangePickerWrapper
+      transitionDuration={0}
+      autoFocus
+    />
+  ))
+  .addWithInfo('with custom vertical spacing', () => (
+    <DateRangePickerWrapper
+      verticalSpacing={0}
+      autoFocus
+    />
   ));
+

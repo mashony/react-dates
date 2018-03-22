@@ -2,14 +2,14 @@ import React from 'react';
 import moment from 'moment';
 import { storiesOf, action } from '@storybook/react';
 
+import InfoPanelDecorator, { monospace } from './InfoPanelDecorator';
+
 import isSameDay from '../src/utils/isSameDay';
 import isInclusivelyAfterDay from '../src/utils/isInclusivelyAfterDay';
 
-import { VERTICAL_ORIENTATION } from '../constants';
+import { VERTICAL_ORIENTATION } from '../src/constants';
 
 import DayPickerRangeControllerWrapper from '../examples/DayPickerRangeControllerWrapper';
-
-const monospace = text => `<span style="font-family:monospace;background:#f7f7f7">${text}</span>`;
 
 const dayPickerRangeControllerInfo = `The ${monospace('DayPickerRangeController')} component is a
   fully controlled version of the ${monospace('DayPicker')} that has built-in rules for selecting a
@@ -27,27 +27,6 @@ const dayPickerRangeControllerInfo = `The ${monospace('DayPickerRangeController'
   The ${monospace('DayPickerRangeController')} is particularly useful if you are interested in the
   ${monospace('DateRangePicker')} functionality and calendar presentation, but would like to
   implement your own inputs.`;
-
-const InfoPanel = ({ text }) => (
-  <div
-    style={{
-      backgroundColor: '#fff',
-      fontColor: '#3c3f40',
-      fontSize: 14,
-      margin: '8px 0',
-      padding: 16,
-    }}
-  >
-    <span dangerouslySetInnerHTML={{ __html: text }} />
-  </div>
-);
-
-const InfoPanelDecorator = story => (
-  <div>
-    <InfoPanel text={dayPickerRangeControllerInfo} />
-    {story()}
-  </div>
-);
 
 const TestPrevIcon = () => (
   <span
@@ -99,12 +78,47 @@ const datesList = [
 ];
 
 storiesOf('DayPickerRangeController', module)
-  .addDecorator(InfoPanelDecorator)
+  .addDecorator(InfoPanelDecorator(dayPickerRangeControllerInfo))
   .addWithInfo('default', () => (
     <DayPickerRangeControllerWrapper
       onOutsideClick={action('DayPickerRangeController::onOutsideClick')}
       onPrevMonthClick={action('DayPickerRangeController::onPrevMonthClick')}
       onNextMonthClick={action('DayPickerRangeController::onNextMonthClick')}
+    />
+  ))
+  .addWithInfo('with 7 days range selection', () => (
+    <DayPickerRangeControllerWrapper
+      onOutsideClick={action('DayPickerRangeController::onOutsideClick')}
+      onPrevMonthClick={action('DayPickerRangeController::onPrevMonthClick')}
+      onNextMonthClick={action('DayPickerRangeController::onNextMonthClick')}
+      startDateOffset={day => day.subtract(3, 'days')}
+      endDateOffset={day => day.add(3, 'days')}
+    />
+  ))
+  .addWithInfo('with 45 days range selection', () => (
+    <DayPickerRangeControllerWrapper
+      onOutsideClick={action('DayPickerRangeController::onOutsideClick')}
+      onPrevMonthClick={action('DayPickerRangeController::onPrevMonthClick')}
+      onNextMonthClick={action('DayPickerRangeController::onNextMonthClick')}
+      startDateOffset={day => day.subtract(22, 'days')}
+      endDateOffset={day => day.add(22, 'days')}
+    />
+  ))
+  .addWithInfo('with 4 days after today range selection', () => (
+    <DayPickerRangeControllerWrapper
+      onOutsideClick={action('DayPickerRangeController::onOutsideClick')}
+      onPrevMonthClick={action('DayPickerRangeController::onPrevMonthClick')}
+      onNextMonthClick={action('DayPickerRangeController::onNextMonthClick')}
+      endDateOffset={day => day.add(4, 'days')}
+    />
+  ))
+  .addWithInfo('with current week range selection', () => (
+    <DayPickerRangeControllerWrapper
+      onOutsideClick={action('DayPickerRangeController::onOutsideClick')}
+      onPrevMonthClick={action('DayPickerRangeController::onPrevMonthClick')}
+      onNextMonthClick={action('DayPickerRangeController::onNextMonthClick')}
+      startDateOffset={day => day.startOf('week')}
+      endDateOffset={day => day.endOf('week')}
     />
   ))
   .addWithInfo('with custom inputs', () => (
@@ -244,7 +258,7 @@ storiesOf('DayPickerRangeController', module)
       onOutsideClick={action('DayPickerRangeController::onOutsideClick')}
       onPrevMonthClick={action('DayPickerRangeController::onPrevMonthClick')}
       onNextMonthClick={action('DayPickerRangeController::onNextMonthClick')}
-      renderDay={day => day.format('ddd')}
+      renderDayContents={day => day.format('ddd')}
     />
   ))
   .addWithInfo('with info panel', () => (
@@ -255,5 +269,13 @@ storiesOf('DayPickerRangeController', module)
       renderCalendarInfo={() => (
         <TestCustomInfoPanel />
       )}
+    />
+  ))
+  .addWithInfo('with no animation', () => (
+    <DayPickerRangeControllerWrapper
+      onOutsideClick={action('DayPickerRangeController::onOutsideClick')}
+      onPrevMonthClick={action('DayPickerRangeController::onPrevMonthClick')}
+      onNextMonthClick={action('DayPickerRangeController::onNextMonthClick')}
+      transitionDuration={0}
     />
   ));

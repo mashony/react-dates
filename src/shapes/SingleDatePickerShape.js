@@ -5,9 +5,12 @@ import { nonNegativeInteger } from 'airbnb-prop-types';
 import { SingleDatePickerPhrases } from '../defaultPhrases';
 import getPhrasePropTypes from '../utils/getPhrasePropTypes';
 
+import IconPositionShape from '../shapes/IconPositionShape';
 import OrientationShape from '../shapes/OrientationShape';
 import anchorDirectionShape from '../shapes/AnchorDirectionShape';
+import openDirectionShape from '../shapes/OpenDirectionShape';
 import DayOfWeekShape from '../shapes/DayOfWeekShape';
+import CalendarInfoPositionShape from '../shapes/CalendarInfoPositionShape';
 
 export default {
   // required props for a functional interactive SingleDatePicker
@@ -27,12 +30,20 @@ export default {
   showClearDate: PropTypes.bool,
   customCloseIcon: PropTypes.node,
   showDefaultInputIcon: PropTypes.bool,
+  inputIconPosition: IconPositionShape,
   customInputIcon: PropTypes.node,
+  noBorder: PropTypes.bool,
+  block: PropTypes.bool,
+  small: PropTypes.bool,
+  regular: PropTypes.bool,
+  verticalSpacing: nonNegativeInteger,
+  keepFocusOnInput: PropTypes.bool,
 
   // calendar presentation and interaction related props
   renderMonth: PropTypes.func,
   orientation: OrientationShape,
   anchorDirection: anchorDirectionShape,
+  openDirection: openDirectionShape,
   horizontalMargin: PropTypes.number,
   withPortal: PropTypes.bool,
   withFullScreenPortal: PropTypes.bool,
@@ -42,9 +53,12 @@ export default {
   keepOpenOnDateSelect: PropTypes.bool,
   reopenPickerOnClearDate: PropTypes.bool,
   renderCalendarInfo: PropTypes.func,
+  calendarInfoPosition: CalendarInfoPositionShape,
   hideKeyboardShortcutsPanel: PropTypes.bool,
   daySize: nonNegativeInteger,
   isRTL: PropTypes.bool,
+  verticalHeight: nonNegativeInteger,
+  transitionDuration: nonNegativeInteger,
 
   // navigation related props
   navPrev: PropTypes.node,
@@ -55,7 +69,8 @@ export default {
   onClose: PropTypes.func,
 
   // day presentation and interaction related props
-  renderDay: PropTypes.func,
+  renderCalendarDay: PropTypes.func,
+  renderDayContents: PropTypes.func,
   enableOutsideDays: PropTypes.bool,
   isDayBlocked: PropTypes.func,
   isOutsideRange: PropTypes.func,
@@ -64,5 +79,6 @@ export default {
   // internationalization props
   displayFormat: PropTypes.oneOfType([PropTypes.string, PropTypes.func]),
   monthFormat: PropTypes.string,
+  weekDayFormat: PropTypes.string,
   phrases: PropTypes.shape(getPhrasePropTypes(SingleDatePickerPhrases)),
 };
